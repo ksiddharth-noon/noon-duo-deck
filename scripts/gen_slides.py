@@ -91,7 +91,7 @@ L, W1, W2, X2 = 96, 580, 1108, 96+580+40   # narrow panel, wide panel, wide pane
 # Section intro, after Apple's "Design principles" title card: black, left-aligned, no header chrome.
 add('intro', '<div style="position:absolute; left:96px; top:474px; width:1400px; display:flex; flex-direction:column; gap:18px">'
     f'<p style="{MD}; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">Design principles</p>'
-    f'<h2 style="{SB}; font-size:76px; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>',
+    f'<h2 style="{PX}; font-size:76px; line-height:1.2; letter-spacing:-1.52px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>',
     "Opening title. The deck runs in three acts: the context of a foldable phone, the problem Sentinel found in today's app, and the redesign that solves it.", bg='#000000')
 
 add('cover', header(0, 'Solution  ·  noon on iPhone Duo', 'noon, unfolded.', '8 screens  →  4 layouts  →  32 designs', 96)
@@ -190,7 +190,7 @@ def title_card(id, eyebrow, title, notes):
     """Black act divider in the style of the opening title card."""
     add(id, '<div style="position:absolute; left:96px; top:474px; width:1600px; display:flex; flex-direction:column; gap:18px">'
         f'<p style="{MD}; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">{eyebrow}</p>'
-        f'<h2 style="{SB}; font-size:76px; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">{title}</h2></div>', notes, bg='#000000')
+        f'<h2 style="{PX}; font-size:76px; line-height:1.2; letter-spacing:-1.52px; color:#f5f5f7">{title}</h2></div>', notes, bg='#000000')
 
 # ── Act 1 · Context: one screen of today's app in each fold state the audit tests ────────────────
 EV.update({
