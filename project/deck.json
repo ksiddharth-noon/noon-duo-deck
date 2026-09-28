@@ -1,0 +1,65 @@
+{
+ "v": 4,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-09-27T19:43:48Z"
+ },
+ "title": "noon on iPhone Duo",
+ "order": [
+  "cover",
+  "postures",
+  "edge",
+  "split",
+  "overlay",
+  "home-a",
+  "home-b",
+  "search-a",
+  "search-b",
+  "product-a",
+  "product-b",
+  "cart-a",
+  "cart-b",
+  "checkout-a",
+  "checkout-b",
+  "address-a",
+  "address-b",
+  "tracking-a",
+  "tracking-b",
+  "account-a",
+  "account-b",
+  "close"
+ ],
+ "sections": {
+  "intro": {
+   "description": "noon on a foldable, and the layout principles it follows",
+   "start": "cover"
+  },
+  "screens": {
+   "description": "Each of the eight screens in all four layouts",
+   "start": "home-a"
+  },
+  "close": {
+   "description": "All eight screens together",
+   "start": "close"
+  }
+ },
+ "faces": {
+  "noontree-semibold": {
+   "family": "Noontree SemiBold",
+   "src": "/_blob/a38b57215c536fa0e03d07a5daec7ee3"
+  },
+  "noontree-medium": {
+   "family": "Noontree Medium",
+   "src": "/_blob/a25edd3639fbce9f53f835ce69a85ff3"
+  },
+  "geist-pixel-square": {
+   "family": "Geist Pixel Square",
+   "src": "/_blob/8aaabb5db122379a9f093cee0c782cc9"
+  },
+  "geist": {
+   "family": "Geist",
+   "href": "https://fonts.googleapis.com/css2?family=Geist:wght@500&display=swap"
+  }
+ },
+ "designSystems": []
+}
