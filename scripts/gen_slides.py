@@ -86,17 +86,17 @@ slides, order = {}, []
 def add(id, body, notes, **kw): slides[id] = sec(id, body, notes, **kw); order.append(id)
 L, W1, W2, X2 = 96, 580, 1108, 96+580+40   # narrow panel, wide panel, wide panel's left
 
-add('cover', header(1, 'noon  ·  iPhone Duo', 'noon, unfolded.', '8 screens  →  4 layouts  →  32 designs', 96)
-    + panel(L, 1728, 'Our screens  ·  Home, folded and open', S('home','outer',650,'noon home on the folded cover screen') + S('home','inner',650,'noon home on the open inner screen'), top=254, height=762, gap=40),
-    'noon on a foldable: the cover screen when folded, the full inner display when open. Every screen comes from the iPhone Duo Figma file.')
-
-row = ''.join(cap(S('home',k,350,a), c) for k,c,a in [('outer','Folded','Home folded'),('inner','Open','Home open in landscape'),('inner-portrait','Open, portrait','Home open in portrait'),('inner-split','Split view','Home in split view')])
 # Section intro, after Apple's "Design principles" title card: black, left-aligned, no header chrome.
 add('intro', '<div style="position:absolute; left:96px; top:474px; width:1400px; display:flex; flex-direction:column; gap:18px">'
     f'<p style="{MD}; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">Design principles</p>'
     f'<h2 style="{SB}; font-size:76px; font-weight:400; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>',
-    'Section intro. The next five slides are the layout principles for the foldable, each pairing a noon screen with the Apple guidance it follows.', bg='#000000')
+    'Opening title. After the cover come five layout principles for the foldable, each pairing a noon screen with the Apple guidance it follows, then all eight screens.', bg='#000000')
 
+add('cover', header(2, 'noon  ·  iPhone Duo', 'noon, unfolded.', '8 screens  →  4 layouts  →  32 designs', 96)
+    + panel(L, 1728, 'Our screens  ·  Home, folded and open', S('home','outer',650,'noon home on the folded cover screen') + S('home','inner',650,'noon home on the open inner screen'), top=254, height=762, gap=40),
+    'noon on a foldable: the cover screen when folded, the full inner display when open. Every screen comes from the iPhone Duo Figma file.')
+
+row = ''.join(cap(S('home',k,350,a), c) for k,c,a in [('outer','Folded','Home folded'),('inner','Open','Home open in landscape'),('inner-portrait','Open, portrait','Home open in portrait'),('inner-split','Split view','Home in split view')])
 add('postures', header(3, 'Principle  ·  Postures', 'Four postures, one app', 'Folded  →  Open  →  Portrait  →  Split')
     + panel(L, 1728, 'Our screens  ·  Home in every layout', row),
     'Each screen ships in four layouts: the folded cover, open in landscape, open in portrait, and split view beside a second app.')
@@ -142,7 +142,7 @@ assert len(order) == TOTAL, len(order)
 
 for k, v in slides.items(): open(f'project/slides/{k}.html','w').write(v)
 json.dump({"v":4,"createdOnFiles":{"v":1,"at":"2026-09-27T19:43:48Z"},"title":"noon on iPhone Duo","order":order,
- "sections":{"intro":{"description":"noon on a foldable, and the layout principles it follows","start":"cover"},
+ "sections":{"intro":{"description":"noon on a foldable, and the layout principles it follows","start":"intro"},
              "screens":{"description":"Each of the eight screens in all four layouts","start":"home-a"},
              "close":{"description":"All eight screens together","start":"close"}},
  "faces":{"noontree-semibold":{"family":"Noontree SemiBold","src":"/_blob/a38b57215c536fa0e03d07a5daec7ee3"},

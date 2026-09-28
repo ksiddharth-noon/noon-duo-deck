@@ -6,8 +6,8 @@
  },
  "title": "noon on iPhone Duo",
  "order": [
-  "cover",
   "intro",
+  "cover",
   "postures",
   "edge",
   "split",
@@ -34,7 +34,7 @@
  "sections": {
   "intro": {
    "description": "noon on a foldable, and the layout principles it follows",
-   "start": "cover"
+   "start": "intro"
   },
   "screens": {
    "description": "Each of the eight screens in all four layouts",
