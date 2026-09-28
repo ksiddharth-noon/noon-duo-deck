@@ -94,7 +94,7 @@ row = ''.join(cap(S('home',k,350,a), c) for k,c,a in [('outer','Folded','Home fo
 # Section intro, after Apple's "Design principles" title card: black, left-aligned, no header chrome.
 add('intro', '<div style="position:absolute; left:96px; top:486px; width:1400px; display:flex; flex-direction:column; gap:14px">'
     f'<p style="{MD}; font-size:60px; line-height:1.1; letter-spacing:-0.6px; color:#86868b">Design principles</p>'
-    f'<h2 style="{SB}; font-size:76px; font-weight:400; line-height:1.1; letter-spacing:-1.2px; color:#f5f5f7">Adapting your app</h2></div>',
+    f'<h2 style="{SB}; font-size:76px; font-weight:400; line-height:1.1; letter-spacing:-1.2px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>',
     'Section intro. The next five slides are the layout principles for the foldable, each pairing a noon screen with the Apple guidance it follows.', bg='#000000')
 
 add('postures', header(3, 'Principle  ·  Postures', 'Four postures, one app', 'Folded  →  Open  →  Portrait  →  Split')
