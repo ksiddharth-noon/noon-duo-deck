@@ -24,7 +24,7 @@ AR = {'outer':585/851,'inner':2160/1518,'inner-portrait':1518/2160,'inner-split'
 BG, PANEL = '#fafaf7', '#f1f1ec'
 SB, MD = "font-family:'Noontree SemiBold', Arial, sans-serif", "font-family:'Noontree Medium', Arial, sans-serif"
 PX, GE = "font-family:'Geist Pixel Square', 'Courier New', monospace", "font-family:'Geist', Arial, sans-serif"
-TOTAL = 26
+TOTAL = 27
 
 def shot(key, h, alt, w=None):
     src = B[key]; w = w or round(h*AR[key.split('-',1)[1] if not key.startswith('ref') else key])
@@ -144,63 +144,71 @@ add('status', header(3, 'Status quo  ·  Sentinel audit', "Where noon's iOS app 
     "closed because folding the device crashes the app. Cart is the weakest flow (3.10 mean, 2.3 in both landscape poses), and the "
     "two landscape states are the weakest fold states.")
 
-FINDINGS = [
- ('Critical', 1, 'Wishlist, folding closed', 'The app crashes: the list switches from 4 to 2 columns while mounted, which React Native does not support.', 'Key the Wishlist list on its column count so it remounts instead of changing live.'),
- (None, 6, 'Order listing, Order details', 'The landscape tab rail draws over the closed portrait layout, covering channel badges and the Need help? bubble.', 'Show the landscape tab rail only in landscape.'),
- (None, 5, 'Checkout, Home, Account, Order confirmation', 'Content straddles the hinge. On Checkout, half folded in landscape, the crease cuts through the price.', 'Hinge-aware layout: keep titles and prices inside one pane.'),
- (None, 5, 'Order listing', 'The Search all orders field is 18pt tall, well under the 44pt minimum touch target.', 'Give the field a 44pt tap area, whatever its visual height.'),
- (None, 4, 'Product listing', 'The floating Sort and Filter bar sits on a product card, hiding its title and price.', 'Dock the bar where it can never cover grid content.'),
- (None, 10, 'Order listing, Checkout, Search', 'Wide layouts stretch a single column: order cards, the address block and search suggestions leave most of each row blank.', 'Use two columns or a bounded width at wide sizes, as the open layouts in this deck do.'),
-]
-def pill(sev, n):
-    bg, fg = (BAND['low'] if sev else ('#e7e6e0', '#3a3a3a'))
-    t = f'{sev}  ·  {n} screen' if sev else f'{n} screens'
-    return f'<p style="width:170px; background:{bg}; border-radius:100px; padding:6px 0px; {SB}; font-size:16px; line-height:20px; color:{fg}; text-align:center; white-space:nowrap">{t.replace("  ·  ", "&#160;·&#160;")}</p>'
-TXT = f"{MD}; font-size:19px; line-height:1.4"
-rows = ['<div style="width:1680px; display:flex; flex-direction:column; gap:10px">',
-        '<div style="display:flex; flex-direction:row; gap:28px; padding:0px 24px">'
-        + ''.join(f'<div style="width:{w}px">{lab(t)}</div>' for w, t in [(170,'Affects'),(260,'Where'),(560,"What's wrong"),(514,'Fix')]) + '</div>']
-for sev, n, where, what, fix in FINDINGS:
-    rows.append('<div style="background:#ffffff; border-radius:16px; padding:16px 24px; display:flex; flex-direction:row; gap:28px; align-items:center">'
-                + pill(sev, n)
-                + f'<p style="width:260px; {SB}; font-size:19px; line-height:1.35; color:#111111">{where}</p>'
-                + f'<p style="width:560px; {TXT}; color:#3a3a3a">{what}</p>'
-                + f'<p style="width:514px; {TXT}; color:#6b6b6b">{fix}</p></div>')
-rows.append('</div>')
-add('findings', header(4, 'Status quo  ·  Top findings', 'What breaks on the fold today', 'Crash  →  Layout  →  Touch targets')
-    + panel(L, 1728, f'Headline findings  ·  {AUDIT}', ''.join(rows), direction='column'),
-    "The five headline findings from the Sentinel audit plus the most common layout issue. The Wishlist crash is the only critical "
-    "one and blocks release; it is a code fix, not a design change. The rest are layout problems the fold exposes: a rail meant for "
-    "landscape drawn in the closed pose, content across the hinge, an undersized touch target, a floating bar over content, and "
-    "single columns stretched across wide screens. Screen counts are from the audit's top issues table.")
+# Show, don't tell: each finding is the audit's own screenshot, with the problem outlined.
+# Box coordinates are in the screenshot's pixels (1000 wide portrait, 1400 wide landscape).
+HI = '#ff5b1f'
+EV = {  # key: (asset id, width, height)
+    'crash':    ('9826d37a87b31067be73f9beb24156ed', 1000, 1374),
+    'ol-c':     ('992ee423df9dfe817aa71701a4a08d0f', 1000, 1393),
+    'co-hl':    ('c02fff29f372c30099db20ffb4dbef3a', 1400, 1017),
+    'plp-op':   ('33e5ec85544b65a204b8dbb276ff9a05', 1000, 1376),
+    'ol-ol':    ('a61c605fe5c11abaf978a74cf6143087', 1400, 1017),
+    'cart-ol':  ('a75f399840b0903b12b46b20ea63f6e8', 1400, 1017),
+}
+def evid(key, w, boxes, caption, meta, dashed=False):
+    blob, iw, ih = EV[key]; k = w / iw; h = round(ih * k)
+    pins = ''.join(f'<div style="position:absolute; left:{round(x0*k)-5}px; top:{round(y0*k)-5}px; width:{round((x1-x0)*k)+10}px; height:{round((y1-y0)*k)+10}px; '
+                   f'border:3px {"dashed" if dashed else "solid"} {HI}; border-radius:12px; background:rgba(255,91,31,0.07)"></div>' for x0, y0, x1, y1 in boxes)
+    return (f'<div style="width:{w}px; display:flex; flex-direction:column; gap:22px">'
+            f'<div style="position:relative; width:{w}px; height:{h}px; flex:none">'
+            f'<img src="/_blob/{blob}" alt="{caption}" style="position:absolute; left:0px; top:0px; width:{w}px; height:{h}px; object-fit:contain">{pins}</div>'
+            f'<div style="display:flex; flex-direction:column; gap:8px">'
+            f'<p style="{SB}; font-size:22px; line-height:1.3; color:#111111">{caption}</p>'
+            f'<p style="{MD}; font-size:16px; line-height:1.4; color:#8a8a84">{meta}</p></div></div>')
+add('evidence-1', header(4, 'Status quo  ·  Top findings, 1 of 2', 'What breaks on the fold today', 'Crash  →  Wrong rail  →  Hinge')
+    + panel(96, 440, 'Wishlist  ·  fold closed', evid('crash', 392, [(92, 122, 230, 294)], 'Fold the phone closed on Wishlist and noon quits to the home screen.', 'Crash  ·  reproduced 2 of 2  ·  the only critical finding'))
+    + panel(576, 440, 'Order listing  ·  closed', evid('ol-c', 392, [(802, 796, 902, 1346)], 'The landscape tab rail shows on the closed screen, over the cards.', '3.8 / 5  ·  same rail on 6 screens'))
+    + panel(1056, 768, 'Checkout  ·  half fold, landscape', evid('co-hl', 720, [(682, 56, 718, 962)], 'The crease runs through the Checkout title, the free-shipping banner and the product name.', '4.0 / 5  ·  content on the hinge on 5 screens')),
+    "Straight from the Sentinel audit screenshots. Wishlist: folding closed crashes the app because the list changes from 4 to 2 columns "
+    "while mounted; fix by keying the list on its column count. Order listing: the landscape tab rail is drawn in the closed portrait "
+    "pose; show it only in landscape. Checkout: content straddles the hinge, and the audit notes the price is cut too; use hinge-aware "
+    "layout so titles and prices stay in one pane.")
+add('evidence-2', header(5, 'Status quo  ·  Top findings, 2 of 2', 'What breaks on the fold today', 'Covered content  →  Empty space  →  Broken layout')
+    + panel(96, 360, 'Product listing  ·  open portrait', evid('plp-op', 312, [(356, 1082, 644, 1172)], 'Sort and Filter sit on top of a product’s title and price.', '4.5 / 5  ·  on 4 listing screens'))
+    + panel(496, 644, 'Order listing  ·  open landscape', evid('ol-ol', 596, [(560, 386, 1244, 506), (560, 604, 1244, 720)], 'One column stretched across the wide screen leaves most of each card empty.', '3.6 / 5  ·  stretched single columns on 10 screens', dashed=True))
+    + panel(1180, 644, 'Cart  ·  open landscape', evid('cart-ol', 596, [(56, 250, 1346, 328)], 'A dark band cuts across the cart and hides the payment summary heading.', '2.3 / 5, tied lowest  ·  the audit asks to confirm the band is app UI, not simulator chrome')),
+    "Product listing: the floating Sort and Filter bar covers a card's title and price; dock it where it never overlaps the grid. "
+    "Order listing: cards stay one column at full width, leaving the right of every card blank; the open layouts in this deck use two "
+    "columns instead. Cart in open landscape scores 2.3, tied for the lowest in the audit; the dark band may be simulator chrome, which "
+    "Sentinel asks to confirm. Not pictured: the Search all orders field is 18pt tall, under the 44pt minimum touch target.")
 
-add('postures', header(5, 'Principle  ·  Postures', 'Four postures, one app', 'Folded  →  Open  →  Portrait  →  Split')
+add('postures', header(6, 'Principle  ·  Postures', 'Four postures, one app', 'Folded  →  Open  →  Portrait  →  Split')
     + panel(L, 1728, 'Our screens  ·  Home in every layout', row),
     'Each screen ships in four layouts: the folded cover, open in landscape, open in portrait, and split view beside a second app.')
 
-add('edge', header(6, 'Principle  ·  Side controls', 'Controls move to the edge', 'Camera  →  Status bar  →  App controls')
+add('edge', header(7, 'Principle  ·  Side controls', 'Controls move to the edge', 'Camera  →  Status bar  →  App controls')
     + panel(L, W1, 'Our screen  ·  Home, folded', S('home','outer',700,'noon home on the cover screen, with status and tab bar in a column on the right edge'))
     + panel(X2, W2, 'Reference  ·  Apple foldable guidance', R('09',657,'Apple Mail: Live Activities, status bar and app controls stacked on the trailing edge') + R('08',657,'Apple Mail: layout margin and horizontal safe area inset'), direction='column', gap=16),
     "Apple's foldable guidance turns the top and bottom bars into one column on the trailing edge: camera, then status, then the app's controls. noon's cover screens follow it; content keeps the full height.")
 
-add('split', header(7, 'Principle  ·  Split view', 'Split view, controls on the outer edge', 'noon  →  Divider  →  Second app')
+add('split', header(8, 'Principle  ·  Split view', 'Split view, controls on the outer edge', 'noon  →  Divider  →  Second app')
     + panel(L, W2, 'Our screen  ·  Home in split view', S('home','inner-split',700,'noon home in split view beside a placeholder app'))
     + panel(L+W2+40, W1, 'Reference  ·  Apple foldable guidance', R('15',532,'Diagram: each app keeps its controls on its outer edge') + R('04',532,'Apple Maps and Messages side by side in split view'), direction='column', gap=16),
     'In split view each app keeps its controls on its outer edge, and only the right-hand app carries the status bar. noon is the left app; the right one is a placeholder.')
 
-add('overlay', header(8, 'Principle  ·  Overlay', 'Sheets float over the page', 'Home  →  Address sheet')
+add('overlay', header(9, 'Principle  ·  Overlay', 'Sheets float over the page', 'Home  →  Address sheet')
     + panel(L, W2, 'Our screen  ·  Address, open', S('address','inner',700,'noon address picker floating as a sheet over home'))
     + panel(L+W2+40, W1, 'Reference  ·  Apple foldable guidance', R('14',532,'Diagram: primary view floating over the secondary view') + R('05',532,'Apple Notes: a primary card over the rest of the screen'), direction='column', gap=16),
     "On the open screen, noon's address picker is a sheet over home rather than a new page, matching Apple's overlay arrangement.")
 
 W3 = (1728 - 2*40) // 3   # three equal panels
-add('sheet', header(9, 'Principle  ·  Sheets on the cover', 'Sheets move status to the top', 'Sheet opens  →  Status moves up  →  Close in the sheet')
+add('sheet', header(10, 'Principle  ·  Sheets on the cover', 'Sheets move status to the top', 'Sheet opens  →  Status moves up  →  Close in the sheet')
     + panel(L, W3, 'Before  ·  Status in the side column', S('address','outer-before',640,'Address sheet on the cover screen, time still in the side column under the camera'))
     + panel(L+W3+40, W3, 'After  ·  Status pill at the top', S('address','outer',640,'Address sheet on the cover screen, time and Wi-Fi in a pill beside the camera and a close button in the sheet'))
     + panel(L+2*(W3+40), W3, 'Reference  ·  Apple share sheet', R('12',480,'Apple share sheet on the folded cover screen, with the status pill beside the camera')),
     "When a sheet covers the cover screen, the side column is hidden, so status moves into a glass pill beside the camera and the sheet carries its own close button — Apple's share-sheet pattern, now applied to noon's address picker.")
 
-n = 10
+n = 11
 for i, (sid, name, sub) in enumerate(SCREENS, 1):
     add(f'{sid}-a', header(n, f'{i:02d}  ·  {name}', f'{name}, folded and open', 'Cover screen  →  Inner screen')
         + panel(L, W1, 'Folded  ·  Cover screen', S(sid,'outer',700,f'{name}, folded'))
