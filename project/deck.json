@@ -7,18 +7,25 @@
  "title": "noon on iPhone Duo",
  "order": [
   "intro",
+  "agenda",
+  "p1",
   "context",
-  "act-problem",
   "status",
   "evidence-1",
   "evidence-2",
-  "act-solution",
-  "cover",
+  "p2",
+  "formfactors",
   "postures",
+  "p3",
+  "nav",
   "edge",
-  "split",
-  "overlay",
+  "actions",
+  "sheets",
   "sheet",
+  "cta",
+  "split",
+  "p4",
+  "cover",
   "ba-1",
   "ba-2",
   "home-a",
@@ -42,16 +49,20 @@
  ],
  "sections": {
   "context": {
-   "description": "A foldable phone, and the five fold states every screen has to handle",
+   "description": "Where today's noon app stands on iPhone Duo, from the Sentinel audit",
    "start": "intro"
   },
-  "problem": {
-   "description": "What the Sentinel audit found in today's noon iOS build on iPhone Duo",
-   "start": "act-problem"
+  "formfactors": {
+   "description": "The six iPhone Duo form factors and the five we design for",
+   "start": "p2"
   },
-  "solution": {
-   "description": "The redesign: layout principles, before and after, and every screen in every layout",
-   "start": "act-solution"
+  "principles": {
+   "description": "How each element adapts: navigation, status, actions, sheets, sticky actions, split view",
+   "start": "p3"
+  },
+  "screens": {
+   "description": "The screens rebuilt for the open screen",
+   "start": "p4"
   },
   "next": {
    "description": "What happens next, and all eight screens together",

@@ -1,6 +1,6 @@
 # noon on iPhone Duo — deck
 
-A 33-slide deck of noon's eight foldable screens (Home, Search, Product, Cart, Checkout, Address,
+A 40-slide deck, in four parts, of noon's eight foldable screens (Home, Search, Product, Cart, Checkout, Address,
 Order tracking, Account), each in four layouts: folded cover, open landscape, open portrait and
 split view. Styled after the *Design X Engineering* slide template in Figma
 (`LnvGQLmFhfU4tfm8WamCZe`, node `21:3`), set in Geist with Geist Pixel titles.
@@ -49,6 +49,7 @@ Hand out `noon-duo-deck.vercel.app`; the scope-suffixed URLs the CLI prints sit 
   included for design discussion; not licensed for reuse.
 - `sentinel/` — six screenshots from the Sentinel responsive build audit of noon iOS (build
   2026.1-21692, 25 Sep 2026), cut out of their white background for the findings slides.
+- `formfactors/` — the six iPhone Duo form factors, cropped from Apple's foldable design guidance.
 - `bezels/` — the iPhone Duo Star White device frames from the same Figma file (folded, open, and
   open rotated to portrait); the screen area is transparent and each screen sits underneath.
 - `fonts/` — Geist Medium, Geist SemiBold (from the `geist` npm package, v1.4.2) and Geist Pixel Square,
