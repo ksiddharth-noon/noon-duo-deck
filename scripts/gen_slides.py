@@ -22,8 +22,9 @@ B.update({'ref-04':'0a69c7ff68a6c42903ed6bfbb7825ea6','ref-05':'ccee3dee513fe6fb
 AR = {'outer':585/851,'inner':2160/1518,'inner-portrait':1518/2160,'inner-split':2160/1518,
       'ref-04':1654/879,'ref-05':1654/879,'ref-08':1654/879,'ref-09':1654/879,'ref-14':841/483,'ref-15':853/452,'ref-12':604/791,'outer-before':585/851}
 BG, PANEL = '#fafaf7', '#f1f1ec'
-SB, MD = "font-family:'Noontree SemiBold', Arial, sans-serif", "font-family:'Noontree Medium', Arial, sans-serif"
-PX, GE = "font-family:'Geist Pixel Square', 'Courier New', monospace", "font-family:'Geist', Arial, sans-serif"
+# One typeface: Geist for all text (600 for emphasis, 500 for the rest), Geist Pixel for titles and numbers.
+SB, MD = "font-family:'Geist', Arial, sans-serif; font-weight:600", "font-family:'Geist', Arial, sans-serif; font-weight:500"
+PX, GE = "font-family:'Geist Pixel Square', 'Courier New', monospace; font-weight:400", "font-family:'Geist', Arial, sans-serif"
 
 def shot(key, h, alt, w=None):
     src = B[key]; w = w or round(h*AR[key.split('-',1)[1] if not key.startswith('ref') else key])
@@ -53,7 +54,7 @@ def header(n, eyebrow, title, chip, tsize=52):
     # Flow chip + counter: one right-aligned row, so the chip hugs its text with fixed padding
     # and always sits 16px from the counter. Arrows get two spaces a side, as in the template.
     chip = chip.replace('  →  ', '&#160; → &#160;')
-    return (f'<p style="position:absolute; left:96px; top:72px; width:1100px; {SB}; font-size:18px; font-weight:400; letter-spacing:1.44px; text-transform:uppercase; color:#6b6b6b; white-space:nowrap">{eyebrow}</p>'
+    return (f'<p style="position:absolute; left:96px; top:72px; width:1100px; {SB}; font-size:18px; letter-spacing:1.44px; text-transform:uppercase; color:#6b6b6b; white-space:nowrap">{eyebrow}</p>'
             f'<h2 style="position:absolute; left:96px; top:108px; width:1240px; {PX}; font-size:{tsize}px; font-weight:400; line-height:1.1; letter-spacing:-1.04px; color:#111111; white-space:nowrap">{title}</h2>'
             f'<div style="position:absolute; left:824px; top:121px; width:1000px; height:44px; display:flex; flex-direction:row; justify-content:end; align-items:center; gap:16px">'
             f'<p style="border:1px solid #d9d9d2; border-radius:100px; padding:9px 20px; {GE}; font-size:18px; font-weight:500; line-height:24px; color:#3a3a3a; white-space:nowrap">{chip}</p>'
@@ -88,7 +89,7 @@ L, W1, W2, X2 = 96, 580, 1108, 96+580+40   # narrow panel, wide panel, wide pane
 # Section intro, after Apple's "Design principles" title card: black, left-aligned, no header chrome.
 add('intro', '<div style="position:absolute; left:96px; top:474px; width:1400px; display:flex; flex-direction:column; gap:18px">'
     f'<p style="{MD}; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">Design principles</p>'
-    f'<h2 style="{SB}; font-size:76px; font-weight:400; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>',
+    f'<h2 style="{SB}; font-size:76px; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>',
     "Opening title. The deck runs in three acts: the context of a foldable phone, the problem Sentinel found in today's app, and the redesign that solves it.", bg='#000000')
 
 add('cover', header(0, 'Solution  ·  noon on iPhone Duo', 'noon, unfolded.', '8 screens  →  4 layouts  →  32 designs', 96)
@@ -187,7 +188,7 @@ def title_card(id, eyebrow, title, notes):
     """Black act divider in the style of the opening title card."""
     add(id, '<div style="position:absolute; left:96px; top:474px; width:1600px; display:flex; flex-direction:column; gap:18px">'
         f'<p style="{MD}; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">{eyebrow}</p>'
-        f'<h2 style="{SB}; font-size:76px; font-weight:400; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">{title}</h2></div>', notes, bg='#000000')
+        f'<h2 style="{SB}; font-size:76px; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">{title}</h2></div>', notes, bg='#000000')
 
 # ── Act 1 · Context: one screen of today's app in each fold state the audit tests ────────────────
 EV.update({
@@ -320,9 +321,7 @@ json.dump({"v":4,"createdOnFiles":{"v":1,"at":"2026-09-27T19:43:48Z"},"title":"n
              "problem":{"description":"What the Sentinel audit found in today's noon iOS build on iPhone Duo","start":"act-problem"},
              "solution":{"description":"The redesign: layout principles, before and after, and every screen in every layout","start":"act-solution"},
              "next":{"description":"What happens next, and all eight screens together","start":"next"}},
- "faces":{"noontree-semibold":{"family":"Noontree SemiBold","src":"/_blob/a38b57215c536fa0e03d07a5daec7ee3"},
-          "noontree-medium":{"family":"Noontree Medium","src":"/_blob/a25edd3639fbce9f53f835ce69a85ff3"},
-          "geist-pixel-square":{"family":"Geist Pixel Square","src":"/_blob/8aaabb5db122379a9f093cee0c782cc9"},
-          "geist":{"family":"Geist","href":"https://fonts.googleapis.com/css2?family=Geist:wght@500&display=swap"}},
+ "faces":{"geist-pixel-square":{"family":"Geist Pixel Square","src":"/_blob/8aaabb5db122379a9f093cee0c782cc9"},
+          "geist":{"family":"Geist","href":"https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap"}},
  "designSystems":[]}, open('project/deck.json','w'), indent=1)
 print(order)

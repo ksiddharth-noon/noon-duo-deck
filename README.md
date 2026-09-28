@@ -3,7 +3,7 @@
 A 33-slide deck of noon's eight foldable screens (Home, Search, Product, Cart, Checkout, Address,
 Order tracking, Account), each in four layouts: folded cover, open landscape, open portrait and
 split view. Styled after the *Design X Engineering* slide template in Figma
-(`LnvGQLmFhfU4tfm8WamCZe`, node `21:3`), set in Noontree with Geist Pixel titles.
+(`LnvGQLmFhfU4tfm8WamCZe`, node `21:3`), set in Geist with Geist Pixel titles.
 
 Live: **https://noon-duo-deck.vercel.app**
 
@@ -51,6 +51,6 @@ Hand out `noon-duo-deck.vercel.app`; the scope-suffixed URLs the CLI prints sit 
   2026.1-21692, 25 Sep 2026), cut out of their white background for the findings slides.
 - `bezels/` — the iPhone Duo Star White device frames from the same Figma file (folded, open, and
   open rotated to portrait); the screen area is transparent and each screen sits underneath.
-- `fonts/` — Noontree (noon's typeface) and Geist Pixel.
+- `fonts/` — Geist Pixel Square. Geist itself loads from Google Fonts.
 
-noon's designs and the Noontree typeface belong to noon; Geist Pixel is under the SIL Open Font License.
+noon's designs belong to noon; Geist and Geist Pixel are under the SIL Open Font License.

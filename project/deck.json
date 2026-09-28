@@ -59,21 +59,13 @@
   }
  },
  "faces": {
-  "noontree-semibold": {
-   "family": "Noontree SemiBold",
-   "src": "/_blob/a38b57215c536fa0e03d07a5daec7ee3"
-  },
-  "noontree-medium": {
-   "family": "Noontree Medium",
-   "src": "/_blob/a25edd3639fbce9f53f835ce69a85ff3"
-  },
   "geist-pixel-square": {
    "family": "Geist Pixel Square",
    "src": "/_blob/8aaabb5db122379a9f093cee0c782cc9"
   },
   "geist": {
    "family": "Geist",
-   "href": "https://fonts.googleapis.com/css2?family=Geist:wght@500&display=swap"
+   "href": "https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap"
   }
  },
  "designSystems": []
