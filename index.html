@@ -9,6 +9,7 @@
 @font-face{font-family:"Geist Pixel Square";src:url(fonts/GeistPixel-Square.woff2) format("woff2");font-display:block}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;background:#e9e8e3;overflow:hidden;font-family:'Noontree Medium',Arial,sans-serif}
+body{transition:background-color .45s ease}
 #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0}
 #stage>section{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
 #stage>section.on{opacity:1;visibility:visible}
@@ -31,7 +32,7 @@ body:hover #hud{opacity:1}
 <aside>noon on a foldable: the cover screen when folded, the full inner display when open. Every screen comes from the iPhone Duo Figma file.</aside>
 </section>
 <section id="intro" data-transition="fade" style="background:#000000; font-family:'Noontree Medium', Arial, sans-serif; color:#111111; padding:96px">
-<div style="position:absolute; left:96px; top:486px; width:1400px; display:flex; flex-direction:column; gap:14px"><p style="font-family:'Noontree Medium', Arial, sans-serif; font-size:60px; line-height:1.1; letter-spacing:-0.6px; color:#86868b">Design principles</p><h2 style="font-family:'Noontree SemiBold', Arial, sans-serif; font-size:76px; font-weight:400; line-height:1.1; letter-spacing:-1.2px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>
+<div style="position:absolute; left:96px; top:474px; width:1400px; display:flex; flex-direction:column; gap:18px"><p style="font-family:'Noontree Medium', Arial, sans-serif; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">Design principles</p><h2 style="font-family:'Noontree SemiBold', Arial, sans-serif; font-size:76px; font-weight:400; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>
 <aside>Section intro. The next five slides are the layout principles for the foldable, each pairing a noon screen with the Apple guidance it follows.</aside>
 </section>
 <section id="postures" data-transition="fade" style="background:#fafaf7; font-family:'Noontree Medium', Arial, sans-serif; color:#111111; padding:96px">
@@ -130,7 +131,7 @@ const stage=document.getElementById('stage'),slides=[...stage.children],hud=docu
 let i=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1))||1)-1));
 function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform=`scale(${s}) translate(-50%,-50%)`;
   grid.querySelectorAll('.tile').forEach(t=>t.firstChild.style.transform=`scale(${t.clientWidth/1920})`);}
-function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('on',k===i));
+function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('on',k===i));document.body.style.backgroundColor=slides[i].style.backgroundColor;hud.style.color=/\(0, 0, 0\)|#000/.test(slides[i].style.backgroundColor)?'#6e6e73':'#8e8e93';
   hud.textContent=`${i+1} / ${slides.length}  ·  ← → to move  ·  G grid  ·  F fullscreen`;history.replaceState(null,'','#'+(i+1));}
 slides.forEach((s,k)=>{const t=document.createElement('div');t.className='tile';const c=s.cloneNode(true);c.removeAttribute('id');c.classList.add('on');
   t.append(c);const b=document.createElement('b');b.textContent=k+1;t.append(b);t.onclick=()=>{grid.classList.remove('on');show(k)};grid.append(t);});
