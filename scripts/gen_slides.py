@@ -148,7 +148,7 @@ add('status', header(0, 'Problem  ·  Sentinel audit', "Where noon's iOS app sta
 # Box coordinates are in the screenshot's pixels (1000 wide portrait, 1400 wide landscape).
 HI = '#ff5b1f'
 EV = {  # key: (asset id, width, height)
-    'crash':    ('9826d37a87b31067be73f9beb24156ed', 1000, 1374),
+    'crash':    ('5c4d1c7af2d1e0db1be9e181b76b5d62', 1000, 1374),
     'ol-c':     ('992ee423df9dfe817aa71701a4a08d0f', 1000, 1393),
     'co-hl':    ('c02fff29f372c30099db20ffb4dbef3a', 1400, 1017),
     'plp-op':   ('33e5ec85544b65a204b8dbb276ff9a05', 1000, 1376),
