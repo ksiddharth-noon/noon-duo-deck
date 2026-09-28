@@ -47,6 +47,8 @@ Hand out `noon-duo-deck.vercel.app`; the scope-suffixed URLs the CLI prints sit 
   via the [duo-fold-preview](https://github.com/ksiddharth-noon/duo-fold-preview) repo.
 - `refs/` — frames from Apple's foldable design guidance, cropped for reference. Apple's material;
   internal reference only.
+- `bezels/` — the iPhone Duo Star White device frames from the same Figma file (folded, open, and
+  open rotated to portrait); the screen area is transparent and each screen sits underneath.
 - `fonts/` — Noontree (noon's typeface) and Geist Pixel.
 
 Keep this repository private.

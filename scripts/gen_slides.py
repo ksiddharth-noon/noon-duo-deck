@@ -8,7 +8,7 @@ import os
 os.chdir(os.path.join(os.path.dirname(__file__), ".."))
 B = {
  'account-inner-portrait':'78c3a3e7dd910d183415fb6b236f6ef6','account-inner-split':'815829d899b4adc3be60897576d17ab0','account-inner':'ef7f5643f80957ef7b1fc49e548e2df4','account-outer':'a512a76f2874ed313640e75c6d45154e',
- 'address-inner-portrait':'bbfdf81bb9ef5a750f2df4ccfbde425d','address-inner-split':'26635eb0c04da69c94d503df19d1a371','address-inner':'a5b3cbf1af3974b6b7291062108a6a0a','address-outer':'294652ee5eb32669346fa0a81c196a74','address-outer-before':'5ac182e975abd8c963407caff89e46ba',
+ 'address-inner-portrait':'bbfdf81bb9ef5a750f2df4ccfbde425d','address-inner-split':'26635eb0c04da69c94d503df19d1a371','address-inner':'a5b3cbf1af3974b6b7291062108a6a0a','address-outer':'a2085a99c1193a6f042707e2d93d30e5','address-outer-before':'5ac182e975abd8c963407caff89e46ba',
  'cart-inner-portrait':'ddf2ee7cd1cd67253ce6b289d89f846e','cart-inner-split':'159807b146adf368cdcfb87b860b5dd5','cart-inner':'6bddb21bb9e61557f0a2624435630691','cart-outer':'7541774f98b83f113baabdbc67f54d07',
  'checkout-inner-portrait':'681ae0cc7026283120218bf9cf54b879','checkout-inner-split':'50d9242b0800b84385439b7f963c04ab','checkout-inner':'af78c9abe2369d968c53b610ea340db2','checkout-outer':'e2e2f11883d57e65adbec07ba08c45e7',
  'home-inner-portrait':'2f8c1b3b905da4dff8ae6d1a7af9aa86','home-inner-split':'e1444dd83d71385aad44fea9621e7031','home-inner':'054310589fa45c52bba7971ef69a6e8d','home-outer':'747a6ede8a44002ef42848ab38fa7c9e',
@@ -29,12 +29,23 @@ TOTAL = 23
 def shot(key, h, alt, w=None):
     src = B[key]; w = w or round(h*AR[key.split('-',1)[1] if not key.startswith('ref') else key])
     return f'<img src="/_blob/{src}" alt="{alt}" style="width:{w}px; height:{h}px; object-fit:cover; border-radius:22px; box-shadow:0 8px 24px rgba(0,0,0,0.08)">'
+# The real iPhone Duo "Star White" device frames from the Figma file, screen area transparent.
+# (frame w, h) · (screen x, y, w, h) inside it, in Figma points.
+BEZEL = {
+    'outer':          ('977ab621c418bae5eed81026fb0458de', 524, 730, 29, 26, 466, 678),
+    'outer-before':   ('977ab621c418bae5eed81026fb0458de', 524, 730, 29, 26, 466, 678),
+    'inner':          ('6f06750c6a86ab1359dcb905c184116c', 963, 700, 36, 37, 890, 626),
+    'inner-split':    ('6f06750c6a86ab1359dcb905c184116c', 963, 700, 36, 37, 890, 626),
+    'inner-portrait': ('7a16c39abfc8418ae3908984520b4b49', 700, 963, 37, 36, 626, 890),
+}
 def S(sid, kind, h, alt):
-    # Phone bezel: a thin Star White titanium edge around a black inner bezel.
-    w = round(h*AR[kind]); r = max(12, round(min(w, h)*0.075)); b = max(6, round(min(w, h)*0.018))
-    return (f'<div style="background:linear-gradient(145deg, #f4f2ed 0%, #d6d3cc 30%, #bdb9b1 55%, #e9e7e1 80%, #c9c5bd 100%); padding:3px; border-radius:{r+b+3}px; box-shadow:0 18px 40px rgba(0,0,0,0.14), 0 2px 6px rgba(0,0,0,0.08)">'
-            f'<div style="background:#0b0b0c; padding:{b}px; border-radius:{r+b}px">'
-            f'<img src="/_blob/{B[sid+"-"+kind]}" alt="{alt}" style="width:{w}px; height:{h}px; object-fit:cover; border-radius:{r}px"></div></div>')
+    """A screen inside its device frame; h is the height of the whole device."""
+    bez, bw, bh, ox, oy, fw, fh = BEZEL[kind]; k = h / bh
+    px = lambda v: f'{round(v*k)}px'
+    return (f'<div style="position:relative; width:{px(bw)}; height:{h}px; flex:none">'
+            f'<img src="/_blob/{B[sid+"-"+kind]}" alt="{alt}" style="position:absolute; left:{px(ox)}; top:{px(oy)}; width:{px(fw)}; height:{px(fh)}; object-fit:cover">'
+            f'<img src="/_blob/{bez}" alt="" style="position:absolute; left:0px; top:0px; width:{px(bw)}; height:{h}px; object-fit:contain"></div>')
+
 def R(n, w, alt): return shot(f'ref-{n}', round(w/AR[f"ref-{n}"]), alt, w)
 
 def header(n, eyebrow, title, chip, tsize=52):
@@ -71,7 +82,7 @@ def add(id, body, notes): slides[id] = sec(id, body, notes); order.append(id)
 L, W1, W2, X2 = 96, 580, 1108, 96+580+40   # narrow panel, wide panel, wide panel's left
 
 add('cover', header(1, 'noon  ·  iPhone Duo', 'noon, unfolded.', '8 screens  →  4 layouts  →  32 designs', 96)
-    + panel(L, 1728, 'Our screens  ·  Home, folded and open', S('home','outer',622,'noon home on the folded cover screen') + S('home','inner',622,'noon home on the open inner screen'), top=254, height=762, gap=40),
+    + panel(L, 1728, 'Our screens  ·  Home, folded and open', S('home','outer',650,'noon home on the folded cover screen') + S('home','inner',650,'noon home on the open inner screen'), top=254, height=762, gap=40),
     'noon on a foldable: the cover screen when folded, the full inner display when open. Every screen comes from the iPhone Duo Figma file.')
 
 row = ''.join(cap(S('home',k,350,a), c) for k,c,a in [('outer','Folded','Home folded'),('inner','Open','Home open in landscape'),('inner-portrait','Open, portrait','Home open in portrait'),('inner-split','Split view','Home in split view')])
@@ -80,17 +91,17 @@ add('postures', header(2, 'Principle  ·  Postures', 'Four postures, one app', '
     'Each screen ships in four layouts: the folded cover, open in landscape, open in portrait, and split view beside a second app.')
 
 add('edge', header(3, 'Principle  ·  Side controls', 'Controls move to the edge', 'Camera  →  Status bar  →  App controls')
-    + panel(L, W1, 'Our screen  ·  Home, folded', S('home','outer',672,'noon home on the cover screen, with status and tab bar in a column on the right edge'))
+    + panel(L, W1, 'Our screen  ·  Home, folded', S('home','outer',700,'noon home on the cover screen, with status and tab bar in a column on the right edge'))
     + panel(X2, W2, 'Reference  ·  Apple foldable guidance', R('09',657,'Apple Mail: Live Activities, status bar and app controls stacked on the trailing edge') + R('08',657,'Apple Mail: layout margin and horizontal safe area inset'), direction='column', gap=16),
     "Apple's foldable guidance turns the top and bottom bars into one column on the trailing edge: camera, then status, then the app's controls. noon's cover screens follow it; content keeps the full height.")
 
 add('split', header(4, 'Principle  ·  Split view', 'Split view, controls on the outer edge', 'noon  →  Divider  →  Second app')
-    + panel(L, W2, 'Our screen  ·  Home in split view', S('home','inner-split',672,'noon home in split view beside a placeholder app'))
+    + panel(L, W2, 'Our screen  ·  Home in split view', S('home','inner-split',700,'noon home in split view beside a placeholder app'))
     + panel(L+W2+40, W1, 'Reference  ·  Apple foldable guidance', R('15',532,'Diagram: each app keeps its controls on its outer edge') + R('04',532,'Apple Maps and Messages side by side in split view'), direction='column', gap=16),
     'In split view each app keeps its controls on its outer edge, and only the right-hand app carries the status bar. noon is the left app; the right one is a placeholder.')
 
 add('overlay', header(5, 'Principle  ·  Overlay', 'Sheets float over the page', 'Home  →  Address sheet')
-    + panel(L, W2, 'Our screen  ·  Address, open', S('address','inner',672,'noon address picker floating as a sheet over home'))
+    + panel(L, W2, 'Our screen  ·  Address, open', S('address','inner',700,'noon address picker floating as a sheet over home'))
     + panel(L+W2+40, W1, 'Reference  ·  Apple foldable guidance', R('14',532,'Diagram: primary view floating over the secondary view') + R('05',532,'Apple Notes: a primary card over the rest of the screen'), direction='column', gap=16),
     "On the open screen, noon's address picker is a sheet over home rather than a new page, matching Apple's overlay arrangement.")
 
@@ -104,15 +115,15 @@ add('sheet', header(6, 'Principle  ·  Sheets on the cover', 'Sheets move status
 n = 7
 for i, (sid, name, sub) in enumerate(SCREENS, 1):
     add(f'{sid}-a', header(n, f'{i:02d}  ·  {name}', f'{name}, folded and open', 'Cover screen  →  Inner screen')
-        + panel(L, W1, 'Folded  ·  Cover screen', S(sid,'outer',672,f'{name}, folded'))
-        + panel(X2, W2, 'Open  ·  Inner screen', S(sid,'inner',672,f'{name}, open in landscape')),
+        + panel(L, W1, 'Folded  ·  Cover screen', S(sid,'outer',700,f'{name}, folded'))
+        + panel(X2, W2, 'Open  ·  Inner screen', S(sid,'inner',700,f'{name}, open in landscape')),
         f'{name}. {sub}'); n += 1
     add(f'{sid}-b', header(n, f'{i:02d}  ·  {name}', f'{name}, portrait and split view', 'Portrait  →  Split view')
-        + panel(L, W1, 'Open  ·  Portrait', S(sid,'inner-portrait',672,f'{name}, open in portrait'))
-        + panel(X2, W2, 'Split view  ·  Beside a second app', S(sid,'inner-split',672,f'{name} in split view beside a placeholder app')),
+        + panel(L, W1, 'Open  ·  Portrait', S(sid,'inner-portrait',700,f'{name}, open in portrait'))
+        + panel(X2, W2, 'Split view  ·  Beside a second app', S(sid,'inner-split',700,f'{name} in split view beside a placeholder app')),
         f'{name} turned upright, and in split view with noon on the left and a second app on the right.'); n += 1
 
-row = ''.join(cap(S(sid,'outer',244,f'{name}, folded'), name) for sid, name, _ in SCREENS)
+row = ''.join(cap(S(sid,'outer',273,f'{name}, folded'), name) for sid, name, _ in SCREENS)
 add('close', header(n, 'Summary', 'Eight screens, every posture', '8 screens  →  4 layouts  →  32 designs')
     + panel(L, 1728, 'Our screens  ·  Every cover screen', row, gap=16),
     'All eight cover screens together. Each also has open landscape, portrait and split-view layouts.')

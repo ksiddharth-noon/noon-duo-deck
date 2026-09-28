@@ -11,6 +11,7 @@ refs = {'0a69c7ff68a6c42903ed6bfbb7825ea6':'04-split-view-maps-and-messages','cc
         '1f25f9df42b91814366764a2ad27185d':'08-layout-margin-and-safe-area-inset','b36fec37a86c2ad7fef68df100e7f88f':'09-live-activities-status-bar-app-controls',
         'fbc5b8a875c73ea7bf917d677f3de23f':'14-overlay-arrangement-diagram','706ebcb38635853b8eda27e8e99e4e32':'15-split-view-controls-diagram','4933d8fadc3d335e9d43636a07f01706':'12-share-sheet-folded'}
 local.update({k: f'refs/{v}.png' for k, v in refs.items()})
+local.update({'977ab621c418bae5eed81026fb0458de':'bezels/outer.webp','6f06750c6a86ab1359dcb905c184116c':'bezels/inner.webp','7a16c39abfc8418ae3908984520b4b49':'bezels/portrait.webp'})
 deck = json.load(open(f'{d}/project/deck.json'))
 secs = '\n'.join(re.sub(r'/_blob/([0-9a-f]{32})', lambda m: local[m.group(1)], open(f'{d}/project/slides/{s}.html').read().strip()) for s in deck['order'])
 fontfile = {'Noontree SemiBold':'Noontree-SemiBold','Noontree Medium':'Noontree-Medium','Geist Pixel Square':'GeistPixel-Square'}
