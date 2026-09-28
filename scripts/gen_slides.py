@@ -30,20 +30,22 @@ def shot(key, h, alt, w=None):
     src = B[key]; w = w or round(h*AR[key.split('-',1)[1] if not key.startswith('ref') else key])
     return f'<img src="/_blob/{src}" alt="{alt}" style="width:{w}px; height:{h}px; object-fit:cover; border-radius:22px; box-shadow:0 8px 24px rgba(0,0,0,0.08)">'
 # The real iPhone Duo "Star White" device frames from the Figma file, screen area transparent.
-# (frame w, h) · (screen x, y, w, h) inside it, in Figma points.
+# (frame w, h) · (screen x, y, w, h) inside it · the screen opening's corner radii TL TR BR BL,
+# measured from the frame's alpha — all in Figma points. The cover's hinge side is nearly square.
 BEZEL = {
-    'outer':          ('977ab621c418bae5eed81026fb0458de', 524, 730, 29, 26, 466, 678),
-    'outer-before':   ('977ab621c418bae5eed81026fb0458de', 524, 730, 29, 26, 466, 678),
-    'inner':          ('6f06750c6a86ab1359dcb905c184116c', 963, 700, 36, 37, 890, 626),
-    'inner-split':    ('6f06750c6a86ab1359dcb905c184116c', 963, 700, 36, 37, 890, 626),
-    'inner-portrait': ('7a16c39abfc8418ae3908984520b4b49', 700, 963, 37, 36, 626, 890),
+    'outer':          ('977ab621c418bae5eed81026fb0458de', 524, 730, 29, 26, 466, 678, (11, 60, 60, 11)),
+    'outer-before':   ('977ab621c418bae5eed81026fb0458de', 524, 730, 29, 26, 466, 678, (11, 60, 60, 11)),
+    'inner':          ('6f06750c6a86ab1359dcb905c184116c', 963, 700, 36, 37, 890, 626, (53, 52, 52, 53)),
+    'inner-split':    ('6f06750c6a86ab1359dcb905c184116c', 963, 700, 36, 37, 890, 626, (53, 52, 52, 53)),
+    'inner-portrait': ('7a16c39abfc8418ae3908984520b4b49', 700, 963, 37, 36, 626, 890, (53, 53, 52, 52)),
 }
 def S(sid, kind, h, alt):
     """A screen inside its device frame; h is the height of the whole device."""
-    bez, bw, bh, ox, oy, fw, fh = BEZEL[kind]; k = h / bh
+    bez, bw, bh, ox, oy, fw, fh, radii = BEZEL[kind]; k = h / bh
     px = lambda v: f'{round(v*k)}px'
+    rad = ' '.join(px(r) for r in radii)
     return (f'<div style="position:relative; width:{px(bw)}; height:{h}px; flex:none">'
-            f'<img src="/_blob/{B[sid+"-"+kind]}" alt="{alt}" style="position:absolute; left:{px(ox)}; top:{px(oy)}; width:{px(fw)}; height:{px(fh)}; object-fit:cover">'
+            f'<img src="/_blob/{B[sid+"-"+kind]}" alt="{alt}" style="position:absolute; left:{px(ox)}; top:{px(oy)}; width:{px(fw)}; height:{px(fh)}; object-fit:cover; border-radius:{rad}">'
             f'<img src="/_blob/{bez}" alt="" style="position:absolute; left:0px; top:0px; width:{px(bw)}; height:{h}px; object-fit:contain"></div>')
 
 def R(n, w, alt): return shot(f'ref-{n}', round(w/AR[f"ref-{n}"]), alt, w)
