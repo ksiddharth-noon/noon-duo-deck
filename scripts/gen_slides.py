@@ -157,10 +157,21 @@ EV = {  # key: (asset id, width, height)
     'ol-ol':    ('a61c605fe5c11abaf978a74cf6143087', 1400, 1017),
     'cart-ol':  ('a75f399840b0903b12b46b20ea63f6e8', 1400, 1017),
 }
+def callout(x, y, w, h, label=None, side='top', dashed=False):
+    """An orange outline at (x, y, w, h), with an optional label pill attached on one side."""
+    out = (f'<div style="position:absolute; left:{round(x) - 5}px; top:{round(y) - 5}px; width:{round(w) + 10}px; height:{round(h) + 10}px; '
+           f'border:3px {"dashed" if dashed else "solid"} {HI}; border-radius:14px; background:rgba(255,91,31,0.07)"></div>')
+    if label:
+        pw, ph = round(len(label) * 8.1) + 26, 28
+        lx, ly = {'top': (x - 5, y - 5 - ph - 6), 'bottom': (x - 5, y + h + 5 + 6),
+                  'left': (x - 5 - 8 - pw, y + h/2 - ph/2), 'right': (x + w + 5 + 8, y + h/2 - ph/2)}[side]
+        out += (f'<p style="position:absolute; left:{round(lx)}px; top:{round(ly)}px; width:{pw}px; height:{ph}px; background:{HI}; border-radius:100px; '
+                f'padding:5px 0px; {SB}; font-size:14px; line-height:18px; color:#ffffff; text-align:center; white-space:nowrap; '
+                f'box-shadow:0 2px 8px rgba(0,0,0,0.18)">{label}</p>')
+    return out
 def evid(key, w, boxes, caption, meta, dashed=False):
     blob, iw, ih = EV[key]; k = w / iw; h = round(ih * k)
-    pins = ''.join(f'<div style="position:absolute; left:{round(x0*k)-5}px; top:{round(y0*k)-5}px; width:{round((x1-x0)*k)+10}px; height:{round((y1-y0)*k)+10}px; '
-                   f'border:3px {"dashed" if dashed else "solid"} {HI}; border-radius:12px; background:rgba(255,91,31,0.07)"></div>' for x0, y0, x1, y1 in boxes)
+    pins = ''.join(callout(b[0]*k, b[1]*k, (b[2]-b[0])*k, (b[3]-b[1])*k, *(b[4:] or [None]), dashed=dashed) if len(b) < 6 else callout(b[0]*k, b[1]*k, (b[2]-b[0])*k, (b[3]-b[1])*k, b[4], b[5], dashed) for b in boxes)
     return (f'<div style="width:{w}px; display:flex; flex-direction:column; gap:22px">'
             f'<div style="position:relative; width:{w}px; height:{h}px; flex:none">'
             f'<img src="/_blob/{blob}" alt="{caption}" style="position:absolute; left:0px; top:0px; width:{w}px; height:{h}px; object-fit:contain">{pins}</div>'
@@ -168,17 +179,17 @@ def evid(key, w, boxes, caption, meta, dashed=False):
             f'<p style="{SB}; font-size:22px; line-height:1.3; color:#111111">{caption}</p>'
             f'<p style="{MD}; font-size:16px; line-height:1.4; color:#8a8a84">{meta}</p></div></div>')
 add('evidence-1', header(0, 'Context  ·  Top findings, 1 of 2', 'What breaks on the fold today', 'Crash  →  Wrong rail  →  Hinge')
-    + panel(96, 440, 'Wishlist  ·  fold closed', evid('crash', 392, [(92, 122, 230, 294)], 'Fold the phone closed on Wishlist and noon quits to the home screen.', 'Crash  ·  reproduced 2 of 2  ·  the only critical finding'))
-    + panel(576, 440, 'Order listing  ·  closed', evid('ol-c', 392, [(802, 796, 902, 1346)], 'The landscape tab rail shows on the closed screen, over the cards.', '3.8 / 5  ·  same rail on 6 screens'))
-    + panel(1056, 768, 'Checkout  ·  half fold, landscape', evid('co-hl', 720, [(682, 56, 718, 962)], 'The crease runs through the Checkout title, the free-shipping banner and the product name.', '4.0 / 5  ·  content on the hinge on 5 screens')),
+    + panel(96, 440, 'Wishlist  ·  fold closed', evid('crash', 392, [(92, 122, 230, 294, 'Back on the home screen', 'bottom')], 'Fold the phone closed on Wishlist and noon quits to the home screen.', 'Crash  ·  reproduced 2 of 2  ·  the only critical finding'))
+    + panel(576, 440, 'Order listing  ·  closed', evid('ol-c', 392, [(802, 796, 902, 1346, 'Landscape tab rail', 'left')], 'The landscape tab rail shows on the closed screen, over the cards.', '3.8 / 5  ·  same rail on 6 screens'))
+    + panel(1056, 768, 'Checkout  ·  half fold, landscape', evid('co-hl', 720, [(682, 56, 718, 962, 'Hinge', 'right')], 'The crease runs through the Checkout title, the free-shipping banner and the product name.', '4.0 / 5  ·  content on the hinge on 5 screens')),
     "Straight from the Sentinel audit screenshots. Wishlist: folding closed crashes the app because the list changes from 4 to 2 columns "
     "while mounted; fix by keying the list on its column count. Order listing: the landscape tab rail is drawn in the closed portrait "
     "pose; show it only in landscape. Checkout: content straddles the hinge, and the audit notes the price is cut too; use hinge-aware "
     "layout so titles and prices stay in one pane.")
 add('evidence-2', header(0, 'Context  ·  Top findings, 2 of 2', 'What breaks on the fold today', 'Covered content  →  Empty space  →  Broken layout')
-    + panel(96, 360, 'Product listing  ·  open portrait', evid('plp-op', 312, [(356, 1082, 644, 1172)], 'Sort and Filter sit on top of a product’s title and price.', '4.5 / 5  ·  on 4 listing screens'))
-    + panel(496, 644, 'Order listing  ·  open landscape', evid('ol-ol', 596, [(560, 386, 1244, 506), (560, 604, 1244, 720)], 'One column stretched across the wide screen leaves most of each card empty.', '3.6 / 5  ·  stretched single columns on 10 screens', dashed=True))
-    + panel(1180, 644, 'Cart  ·  open landscape', evid('cart-ol', 596, [(56, 250, 1346, 328)], 'A dark band cuts across the cart and hides the payment summary heading.', '2.3 / 5, tied lowest  ·  the audit asks to confirm the band is app UI, not simulator chrome')),
+    + panel(96, 360, 'Product listing  ·  open portrait', evid('plp-op', 312, [(356, 1082, 644, 1172, 'Covers a card', 'top')], 'Sort and Filter sit on top of a product’s title and price.', '4.5 / 5  ·  on 4 listing screens'))
+    + panel(496, 644, 'Order listing  ·  open landscape', evid('ol-ol', 596, [(560, 386, 1244, 506, 'Empty', 'top'), (560, 604, 1244, 720)], 'One column stretched across the wide screen leaves most of each card empty.', '3.6 / 5  ·  stretched single columns on 10 screens', dashed=True))
+    + panel(1180, 644, 'Cart  ·  open landscape', evid('cart-ol', 596, [(56, 250, 1346, 328, 'Dark band over the summary', 'bottom')], 'A dark band cuts across the cart and hides the payment summary heading.', '2.3 / 5, tied lowest  ·  the audit asks to confirm the band is app UI, not simulator chrome')),
     "Product listing: the floating Sort and Filter bar covers a card's title and price; dock it where it never overlaps the grid. "
     "Order listing: cards stay one column at full width, leaving the right of every card blank; the open layouts in this deck use two "
     "columns instead. Cart in open landscape scores 2.3, tied for the lowest in the audit; the dark band may be simulator chrome, which "
@@ -321,10 +332,9 @@ EV.update({
     'iphone-home': ('f7e0e27fc8d88c46fdec6d73acf7bdb2', 750, 1634),
 })
 def hl_pins(boxes, ox, oy, sw, sh, dashed=False):
-    """Outline boxes given as fractions (x0, y0, x1, y1) of a screen at (ox, oy) sized sw × sh."""
-    return ''.join(f'<div style="position:absolute; left:{round(ox + x0*sw) - 5}px; top:{round(oy + y0*sh) - 5}px; '
-                   f'width:{round((x1 - x0)*sw) + 10}px; height:{round((y1 - y0)*sh) + 10}px; border:3px {"dashed" if dashed else "solid"} {HI}; '
-                   f'border-radius:14px; background:rgba(255,91,31,0.07)"></div>' for x0, y0, x1, y1 in boxes)
+    """Callouts for boxes given as fractions (x0, y0, x1, y1[, label[, side]]) of a screen at (ox, oy), sw × sh."""
+    return ''.join(callout(ox + b[0]*sw, oy + b[1]*sh, (b[2] - b[0])*sw, (b[3] - b[1])*sh,
+                           b[4] if len(b) > 4 else None, b[5] if len(b) > 5 else 'top', dashed) for b in boxes)
 def S_hl(sid, kind, h, alt, boxes):
     bez, bw, bh, ox, oy, fw, fh, _ = BEZEL[kind]; k = h / bh; w = round(bw * k)
     return (f'<div style="position:relative; width:{w}px; height:{h}px; flex:none">{S(sid, kind, h, alt)}'
@@ -351,7 +361,7 @@ def agenda_card(n, title, text):
 AGENDA = [('Context', "Where today's noon app stands on iPhone Duo, from the Sentinel audit."),
           ('Form factors', 'The six ways iPhone Duo is held, and the five we design for.'),
           ('Design principles', 'How navigation, status, actions, sheets and buttons adapt, one element at a time.'),
-          ('Screens', 'Eight screens rebuilt for the open screen, before and after.')]
+          ('Screens', 'The worst screens before and after, then all eight rebuilt for the open screen.')]
 add('agenda', header(0, 'Agenda', 'Four parts', 'Context  →  Form factors  →  Principles  →  Screens')
     + ''.join(panel(L + i*(W4 + 40), W4, f'Part {i+1}', agenda_card(i+1, t, d)) for i, (t, d) in enumerate(AGENDA)),
     'The deck in four parts: the context from the Sentinel audit, the form factors we design for, the design principle for each '
@@ -364,7 +374,7 @@ title_card('p2', 'Part 2  ·  Form factors', 'What we are designing for',
 title_card('p3', 'Part 3  ·  Design principles', 'How each element adapts',
            'Part three. One element at a time: navigation, the status bar, top-bar actions, bottom sheets, sticky buttons and split view.')
 title_card('p4', 'Part 4  ·  Screens', 'Rebuilt for the open screen',
-           'Part four. The screens redesigned from the ground up to fill the open, unfolded screen, starting with the worst ones from the audit.')
+           'Part four. The screens redesigned from the ground up to fill the open, unfolded screen: the worst ones from the audit before and after, then all eight.')
 
 # ── Part 2 · the six form factors ───────────────────────────────────────────────────────────────
 FF = [('ff-closed', 'Closed', 'Cover screen, portrait  ·  cover layout', True),
@@ -393,53 +403,82 @@ add('formfactors', header(0, 'Form factors  ·  iPhone Duo', 'Six form factors, 
 
 # ── Part 3 · design principles, one element per slide ─────────────────────────────────────────────
 add('nav', header(0, 'Principle  ·  Navigation', 'The tab bar becomes a rail', 'Bottom bar  →  Side column  →  Trailing edge')
-    + panel(L, 360, 'iPhone  ·  today', item(iphone(600, 'noon home on iPhone with the tab bar along the bottom', [(0.03, 0.905, 0.967, 0.982)]),
+    + panel(L, 360, 'iPhone  ·  today', item(iphone(600, 'noon home on iPhone with the tab bar along the bottom', [(0.03, 0.905, 0.967, 0.982, 'Tab bar', 'top')]),
                                              'A tab bar floats along the bottom.', 'Home, Categories, Deals, Account, Cart'))
-    + panel(L + 400, 500, 'iPhone Duo  ·  closed', item(S_hl('home', 'outer', 600, 'noon home on the cover screen, tabs in the side column', [(0.846, 0.578, 0.952, 0.968)]),
+    + panel(L + 400, 500, 'iPhone Duo  ·  closed', item(S_hl('home', 'outer', 600, 'noon home on the cover screen, tabs in the side column', [(0.846, 0.578, 0.952, 0.968, 'Tab rail', 'left')]),
                                                      'The tabs stand up as a rail in the side column.', 'Right edge, under the status bar'))
-    + panel(L + 940, 788, 'iPhone Duo  ·  open', item(S_hl('home', 'inner', 530, 'noon home on the open screen, tabs on the trailing edge', [(0.912, 0.545, 0.982, 0.96)]),
+    + panel(L + 940, 788, 'iPhone Duo  ·  open', item(S_hl('home', 'inner', 530, 'noon home on the open screen, tabs on the trailing edge', [(0.912, 0.545, 0.982, 0.96, 'Tab rail', 'left')]),
                                                    'On the open screen the rail keeps to the trailing edge.', 'The same five tabs, in the same order')),
     "On iPhone, noon's five tabs float along the bottom. On the Duo's cover screen they stand up as a vertical rail in the side "
     "column, under the camera and status bar, so content keeps the full height. On the open screen the rail stays on the trailing "
     "edge. In split view it moves to noon's outer edge; see the split view principle.")
 
 add('actions', header(0, 'Principle  ·  Top bar', 'Back and actions join the column', 'Back  →  Search  →  Wishlist  →  Share')
-    + panel(L, W1, 'iPhone Duo  ·  closed', item(S_hl('product', 'outer', 600, 'Product on the cover screen, actions in the side column', [(0.842, 0.235, 0.955, 0.535)]),
+    + panel(L, W1, 'iPhone Duo  ·  closed', item(S_hl('product', 'outer', 600, 'Product on the cover screen, actions in the side column', [(0.842, 0.235, 0.955, 0.535, 'Back, search, wishlist, share', 'left')]),
                                                'Back, search, wishlist and share stack under the status bar.', 'Product, folded'))
-    + panel(X2, W2, 'iPhone Duo  ·  open', item(S_hl('product', 'inner', 600, 'Product on the open screen, actions on the trailing edge', [(0.928, 0.15, 0.995, 0.475)]),
+    + panel(X2, W2, 'iPhone Duo  ·  open', item(S_hl('product', 'inner', 600, 'Product on the open screen, actions on the trailing edge', [(0.928, 0.15, 0.995, 0.475, 'Back, search, wishlist, share', 'left')]),
                                               'The same four actions sit above the tab rail on the open screen.', 'Product, open landscape')),
     "The top bar's buttons leave the top of the screen. Back, search, wishlist and share stack in the side column under the status "
     "bar, above the tab rail, on the cover and on the open screen, so the product image and details run to the top.")
 
 add('sheets', header(0, 'Principle  ·  Bottom sheets', 'Bottom sheets fit the posture', 'Cover  →  Open  →  Split view')
-    + panel(L, W3, 'iPhone Duo  ·  closed', item(S_hl('address', 'outer', 600, 'Address sheet on the cover screen', [(0.675, 0.015, 0.858, 0.078), (0.828, 0.163, 0.94, 0.237)]),
+    + panel(L, W3, 'iPhone Duo  ·  closed', item(S_hl('address', 'outer', 600, 'Address sheet on the cover screen', [(0.675, 0.015, 0.858, 0.078, 'Status pill', 'left'), (0.828, 0.163, 0.94, 0.237, 'Close', 'bottom')]),
                                                'The sheet takes the screen; status moves to a pill and close sits in the sheet.', 'Address, folded'))
-    + panel(L + W3 + 40, W3, 'iPhone Duo  ·  open', item(S_hl('address', 'inner', 364, 'Address sheet floating over home on the open screen', [(0.26, 0.16, 0.745, 0.985)]),
+    + panel(L + W3 + 40, W3, 'iPhone Duo  ·  open', item(S_hl('address', 'inner', 364, 'Address sheet floating over home on the open screen', [(0.26, 0.16, 0.745, 0.985, 'Floating sheet', 'top')]),
                                                        'A floating card over home, so you keep your place.', 'Address, open landscape'))
-    + panel(L + 2*(W3 + 40), W3, 'iPhone Duo  ·  split view', item(S_hl('address', 'inner-split', 364, "Address sheet inside noon's half in split view", [(0.015, 0.105, 0.475, 0.995)]),
+    + panel(L + 2*(W3 + 40), W3, 'iPhone Duo  ·  split view', item(S_hl('address', 'inner-split', 364, "Address sheet inside noon's half in split view", [(0.015, 0.105, 0.475, 0.995, "Sheet in noon's half", 'top')]),
                                                                  "The sheet stays inside noon's half.", 'Address, split view')),
     "One sheet, three postures. On the cover screen the address sheet takes the screen, status moves into a pill beside the camera and "
     "the sheet carries its own close button. On the open screen it floats as a card over home. In split view it stays inside noon's "
     "half and leaves the other app alone.")
 
 add('cta', header(0, 'Principle  ·  Sticky actions', 'The buy button stays with the total', 'Dock  →  Summary column')
-    + panel(L, 400, 'iPhone Duo  ·  closed', item(S_hl('cart', 'outer', 490, 'Cart on the cover screen, total and Checkout docked at the bottom', [(0.025, 0.9, 0.8, 0.992)]),
+    + panel(L, 400, 'iPhone Duo  ·  closed', item(S_hl('cart', 'outer', 490, 'Cart on the cover screen, total and Checkout docked at the bottom', [(0.025, 0.9, 0.8, 0.992, 'Total and Checkout', 'top')]),
                                               'Folded, the total and Checkout dock along the bottom.', 'Cart, folded'))
-    + panel(L + 440, 624, 'iPhone Duo  ·  open', item(S_hl('cart', 'inner', 419, 'Cart on the open screen, Checkout under the payment summary', [(0.505, 0.912, 0.905, 0.992)]),
+    + panel(L + 440, 624, 'iPhone Duo  ·  open', item(S_hl('cart', 'inner', 419, 'Cart on the open screen, Checkout under the payment summary', [(0.505, 0.912, 0.905, 0.992, 'Checkout', 'top')]),
                                                    'Open, Checkout sits under the payment summary it pays for.', 'Cart, open landscape'))
-    + panel(L + 1104, 624, 'iPhone Duo  ·  open', item(S_hl('checkout', 'inner', 419, 'Checkout on the open screen, Place Order under the total', [(0.505, 0.912, 0.935, 0.992)]),
+    + panel(L + 1104, 624, 'iPhone Duo  ·  open', item(S_hl('checkout', 'inner', 419, 'Checkout on the open screen, Place Order under the total', [(0.505, 0.912, 0.935, 0.992, 'Place Order', 'top')]),
                                                     'Place Order closes the payment column, under the total.', 'Checkout, open landscape')),
     "On the cover screen the total and the Checkout button dock along the bottom, like on a phone. On the open screen the button "
     "moves into the payment column, directly under the total it charges: Checkout in the cart, Place Order at checkout.")
 
-for old in ('act-problem', 'act-solution', 'overlay'): slides.pop(old)
+add('edge', header(0, 'Principle  ·  Status bar', 'Status joins the side column', 'Camera  →  Status bar  →  Tab rail')
+    + panel(L, W1, 'iPhone Duo  ·  closed', item(S_hl('home', 'outer', 600, 'noon home on the cover screen, status and tabs in the side column',
+                                               [(0.846, 0.035, 0.957, 0.217, 'Camera and status', 'left'), (0.846, 0.578, 0.952, 0.968, 'Tab rail', 'left')]),
+                                               'Status sits under the camera, above the tabs, in one column.', 'Home, folded'))
+    + panel(X2, W2, 'Reference  ·  Apple foldable guidance', R('09',657,'Apple Mail: Live Activities, status bar and app controls stacked on the trailing edge') + R('08',657,'Apple Mail: layout margin and horizontal safe area inset'), direction='column', gap=16),
+    "Apple's foldable guidance turns the top and bottom bars into one column on the trailing edge: camera, then status, then the "
+    "app's controls. noon's cover screen follows it, so the content keeps the full height of the screen.")
+add('split', header(0, 'Principle  ·  Split view', 'Each app keeps its controls on its outer edge', 'noon  →  Divider  →  Second app')
+    + panel(L, W2, 'iPhone Duo  ·  split view', item(S_hl('home', 'inner-split', 600, 'noon home in split view beside a placeholder app',
+                                                   [(0.012, 0.03, 0.098, 0.975, "noon's controls", 'bottom'), (0.905, 0.03, 0.99, 0.975, "Other app's controls", 'bottom')]),
+                                                   "noon's back button and tabs move to its outer, left edge; status stays with the right-hand app.", 'Home, split view'))
+    + panel(L+W2+40, W1, 'Reference  ·  Apple foldable guidance', R('15',532,'Diagram: each app keeps its controls on its outer edge') + R('04',532,'Apple Maps and Messages side by side in split view'), direction='column', gap=16),
+    "In split view each app keeps its controls on its outer edge, and only the right-hand app carries the status bar. noon is the "
+    "left app, so its back button and tab rail sit on the left edge; the right-hand app here is a placeholder.")
+
+# ── Part 4 · all eight screens, open ────────────────────────────────────────────────────────────
+def gcell(sid, name):
+    dev = S(sid, 'inner', 291, f'{name}, open in landscape')
+    return (f'<div style="display:flex; flex-direction:column; gap:14px; width:400px">{dev}'
+            f'<p style="{SB}; font-size:20px; line-height:1.3; color:#111111">{name}</p></div>')
+add('gallery', header(0, 'Screens  ·  All eight', 'Eight screens, built for the open screen', '8 screens  →  open landscape')
+    + panel(L, 1728, 'Open landscape  ·  every redesigned screen',
+            '<div style="width:1680px; display:grid; grid-template-columns:repeat(4, 408px); gap:16px; justify-items:center">'
+            + ''.join(gcell(sid, name) for sid, name, _ in SCREENS) + '</div>'),
+    'All eight screens as rebuilt for the open screen: home, search, product, cart, checkout, address, order tracking and account. '
+    'Each also has cover, portrait and split-view layouts in the Figma file; the fold preview shows them live.')
+
 SCREEN_SLIDES = [f'{sid}-{ab}' for sid, *_ in SCREENS for ab in 'ab']
-order = (['intro', 'agenda',
-          'p1', 'context', 'status', 'evidence-1', 'evidence-2',
-          'p2', 'formfactors', 'postures',
-          'p3', 'nav', 'edge', 'actions', 'sheets', 'sheet', 'cta', 'split',
-          'p4', 'cover', 'ba-1', 'ba-2'] + SCREEN_SLIDES + ['next', 'close'])
-assert sorted(order) == sorted(slides), set(order) ^ set(slides)
+# A 20-slide cut. Slides built above but left out of the story (the per-screen walkthrough, the
+# layouts overview, the cover-sheet detail and the old act cards) stay available in the generator.
+order = ['intro', 'agenda',
+         'p1', 'status', 'evidence-1', 'evidence-2',
+         'p2', 'formfactors',
+         'p3', 'nav', 'edge', 'actions', 'sheets', 'cta', 'split',
+         'p4', 'ba-1', 'ba-2', 'gallery',
+         'next']
+missing = [k for k in order if k not in slides]; assert not missing, missing
 for i, k in enumerate(order, 1):
     open(f'project/slides/{k}.html', 'w').write(slides[k].replace('@@N@@', f'{i:02d}').replace('@@TOTAL@@', str(len(order))))
 json.dump({"v":4,"createdOnFiles":{"v":1,"at":"2026-09-27T19:43:48Z"},"title":"noon on iPhone Duo","order":order,
@@ -447,7 +486,7 @@ json.dump({"v":4,"createdOnFiles":{"v":1,"at":"2026-09-27T19:43:48Z"},"title":"n
              "formfactors":{"description":"The six iPhone Duo form factors and the five we design for","start":"p2"},
              "principles":{"description":"How each element adapts: navigation, status, actions, sheets, sticky actions, split view","start":"p3"},
              "screens":{"description":"The screens rebuilt for the open screen","start":"p4"},
-             "next":{"description":"What happens next, and all eight screens together","start":"next"}},
+             "next":{"description":"What happens next","start":"next"}},
  "faces":{"geist-medium":{"family":"Geist Medium","src":"/_blob/1e63a3c1537b28b5ce76a1919b6233d1"},
           "geist-semibold":{"family":"Geist SemiBold","src":"/_blob/e2bff1cac75a16fb23b2560722f0bfe2"},
           "geist-pixel-square":{"family":"Geist Pixel Square","src":"/_blob/8aaabb5db122379a9f093cee0c782cc9"}},
