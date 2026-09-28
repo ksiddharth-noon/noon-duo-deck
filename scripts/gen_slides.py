@@ -8,7 +8,7 @@ import os
 os.chdir(os.path.join(os.path.dirname(__file__), ".."))
 B = {
  'account-inner-portrait':'78c3a3e7dd910d183415fb6b236f6ef6','account-inner-split':'815829d899b4adc3be60897576d17ab0','account-inner':'ef7f5643f80957ef7b1fc49e548e2df4','account-outer':'a512a76f2874ed313640e75c6d45154e',
- 'address-inner-portrait':'bbfdf81bb9ef5a750f2df4ccfbde425d','address-inner-split':'26635eb0c04da69c94d503df19d1a371','address-inner':'a5b3cbf1af3974b6b7291062108a6a0a','address-outer':'5ac182e975abd8c963407caff89e46ba',
+ 'address-inner-portrait':'bbfdf81bb9ef5a750f2df4ccfbde425d','address-inner-split':'26635eb0c04da69c94d503df19d1a371','address-inner':'a5b3cbf1af3974b6b7291062108a6a0a','address-outer':'294652ee5eb32669346fa0a81c196a74','address-outer-before':'5ac182e975abd8c963407caff89e46ba',
  'cart-inner-portrait':'ddf2ee7cd1cd67253ce6b289d89f846e','cart-inner-split':'159807b146adf368cdcfb87b860b5dd5','cart-inner':'6bddb21bb9e61557f0a2624435630691','cart-outer':'7541774f98b83f113baabdbc67f54d07',
  'checkout-inner-portrait':'681ae0cc7026283120218bf9cf54b879','checkout-inner-split':'50d9242b0800b84385439b7f963c04ab','checkout-inner':'af78c9abe2369d968c53b610ea340db2','checkout-outer':'e2e2f11883d57e65adbec07ba08c45e7',
  'home-inner-portrait':'2f8c1b3b905da4dff8ae6d1a7af9aa86','home-inner-split':'e1444dd83d71385aad44fea9621e7031','home-inner':'054310589fa45c52bba7971ef69a6e8d','home-outer':'747a6ede8a44002ef42848ab38fa7c9e',
@@ -18,13 +18,13 @@ B = {
 }
 import json
 B.update({'ref-04':'0a69c7ff68a6c42903ed6bfbb7825ea6','ref-05':'ccee3dee513fe6fba949a0373846083b','ref-08':'1f25f9df42b91814366764a2ad27185d',
-          'ref-09':'b36fec37a86c2ad7fef68df100e7f88f','ref-14':'fbc5b8a875c73ea7bf917d677f3de23f','ref-15':'706ebcb38635853b8eda27e8e99e4e32'})
+          'ref-09':'b36fec37a86c2ad7fef68df100e7f88f','ref-14':'fbc5b8a875c73ea7bf917d677f3de23f','ref-15':'706ebcb38635853b8eda27e8e99e4e32','ref-12':'4933d8fadc3d335e9d43636a07f01706'})
 AR = {'outer':585/851,'inner':2160/1518,'inner-portrait':1518/2160,'inner-split':2160/1518,
-      'ref-04':1654/879,'ref-05':1654/879,'ref-08':1654/879,'ref-09':1654/879,'ref-14':841/483,'ref-15':853/452}
+      'ref-04':1654/879,'ref-05':1654/879,'ref-08':1654/879,'ref-09':1654/879,'ref-14':841/483,'ref-15':853/452,'ref-12':604/791,'outer-before':585/851}
 BG, PANEL = '#fafaf7', '#f1f1ec'
 SB, MD = "font-family:'Noontree SemiBold', Arial, sans-serif", "font-family:'Noontree Medium', Arial, sans-serif"
 PX, GE = "font-family:'Geist Pixel Square', 'Courier New', monospace", "font-family:'Geist', Arial, sans-serif"
-TOTAL = 22
+TOTAL = 23
 
 def shot(key, h, alt, w=None):
     src = B[key]; w = w or round(h*AR[key.split('-',1)[1] if not key.startswith('ref') else key])
@@ -94,7 +94,14 @@ add('overlay', header(5, 'Principle  ·  Overlay', 'Sheets float over the page',
     + panel(L+W2+40, W1, 'Reference  ·  Apple foldable guidance', R('14',532,'Diagram: primary view floating over the secondary view') + R('05',532,'Apple Notes: a primary card over the rest of the screen'), direction='column', gap=16),
     "On the open screen, noon's address picker is a sheet over home rather than a new page, matching Apple's overlay arrangement.")
 
-n = 6
+W3 = (1728 - 2*40) // 3   # three equal panels
+add('sheet', header(6, 'Principle  ·  Sheets on the cover', 'Sheets move status to the top', 'Sheet opens  →  Status moves up  →  Close in the sheet')
+    + panel(L, W3, 'Before  ·  Status in the side column', S('address','outer-before',640,'Address sheet on the cover screen, time still in the side column under the camera'))
+    + panel(L+W3+40, W3, 'After  ·  Status pill at the top', S('address','outer',640,'Address sheet on the cover screen, time and Wi-Fi in a pill beside the camera and a close button in the sheet'))
+    + panel(L+2*(W3+40), W3, 'Reference  ·  Apple share sheet', R('12',480,'Apple share sheet on the folded cover screen, with the status pill beside the camera')),
+    "When a sheet covers the cover screen, the side column is hidden, so status moves into a glass pill beside the camera and the sheet carries its own close button — Apple's share-sheet pattern, now applied to noon's address picker.")
+
+n = 7
 for i, (sid, name, sub) in enumerate(SCREENS, 1):
     add(f'{sid}-a', header(n, f'{i:02d}  ·  {name}', f'{name}, folded and open', 'Cover screen  →  Inner screen')
         + panel(L, W1, 'Folded  ·  Cover screen', S(sid,'outer',672,f'{name}, folded'))
