@@ -51,11 +51,14 @@ def S(sid, kind, h, alt):
 def R(n, w, alt): return shot(f'ref-{n}', round(w/AR[f"ref-{n}"]), alt, w)
 
 def header(n, eyebrow, title, chip, tsize=52):
-    cw = round(len(chip)*8.2) + 44
+    # Flow chip + counter: one right-aligned row, so the chip hugs its text with fixed padding
+    # and always sits 16px from the counter. Arrows get two spaces a side, as in the template.
+    chip = chip.replace('  →  ', '&#160; → &#160;')
     return (f'<p style="position:absolute; left:96px; top:72px; width:1100px; {SB}; font-size:18px; font-weight:400; letter-spacing:1.44px; text-transform:uppercase; color:#6b6b6b; white-space:nowrap">{eyebrow}</p>'
             f'<h2 style="position:absolute; left:96px; top:108px; width:1240px; {PX}; font-size:{tsize}px; font-weight:400; line-height:1.1; letter-spacing:-1.04px; color:#111111; white-space:nowrap">{title}</h2>'
-            f'<p style="position:absolute; left:{1757-cw}px; top:121px; width:{cw}px; height:44px; border:1px solid #d9d9d2; border-radius:100px; padding:10px 20px; {GE}; font-size:18px; font-weight:500; line-height:1.3; color:#3a3a3a; white-space:nowrap">{chip}</p>'
-            f'<p style="position:absolute; left:1764px; top:132px; width:60px; {MD}; font-size:18px; color:#9a9a94; text-align:right; white-space:nowrap">{n:02d} / {TOTAL}</p>')
+            f'<div style="position:absolute; left:824px; top:121px; width:1000px; height:44px; display:flex; flex-direction:row; justify-content:end; align-items:center; gap:16px">'
+            f'<p style="border:1px solid #d9d9d2; border-radius:100px; padding:9px 20px; {GE}; font-size:18px; font-weight:500; line-height:24px; color:#3a3a3a; white-space:nowrap">{chip}</p>'
+            f'<p style="{MD}; font-size:18px; line-height:24px; color:#9a9a94; white-space:nowrap">{n:02d} / {TOTAL}</p></div>')
 
 def panel(left, width, label, inner, top=205, height=811, direction='row', gap=24):
     return (f'<div style="position:absolute; left:{left}px; top:{top}px; width:{width}px; height:{height}px; background:{PANEL}; border-radius:28px; padding:24px; display:flex; flex-direction:column; gap:16px; overflow:hidden">'
