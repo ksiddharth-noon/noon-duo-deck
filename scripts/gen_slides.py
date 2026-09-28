@@ -23,8 +23,10 @@ AR = {'outer':585/851,'inner':2160/1518,'inner-portrait':1518/2160,'inner-split'
       'ref-04':1654/879,'ref-05':1654/879,'ref-08':1654/879,'ref-09':1654/879,'ref-14':841/483,'ref-15':853/452,'ref-12':604/791,'outer-before':585/851}
 BG, PANEL = '#fafaf7', '#f1f1ec'
 # One typeface: Geist for all text (600 for emphasis, 500 for the rest), Geist Pixel for titles and numbers.
-SB, MD = "font-family:'Geist', Arial, sans-serif; font-weight:600", "font-family:'Geist', Arial, sans-serif; font-weight:500"
-PX, GE = "font-family:'Geist Pixel Square', 'Courier New', monospace; font-weight:400", "font-family:'Geist', Arial, sans-serif"
+# Geist ships as two bundled static faces, each its own family at its true weight, so nothing is
+# synthesised and nothing depends on Google Fonts loading.
+SB, MD = "font-family:'Geist SemiBold', Arial, sans-serif; font-weight:400", "font-family:'Geist Medium', Arial, sans-serif; font-weight:400"
+PX = "font-family:'Geist Pixel Square', 'Courier New', monospace; font-weight:400"
 
 def shot(key, h, alt, w=None):
     src = B[key]; w = w or round(h*AR[key.split('-',1)[1] if not key.startswith('ref') else key])
@@ -57,7 +59,7 @@ def header(n, eyebrow, title, chip, tsize=52):
     return (f'<p style="position:absolute; left:96px; top:72px; width:1100px; {SB}; font-size:18px; letter-spacing:1.44px; text-transform:uppercase; color:#6b6b6b; white-space:nowrap">{eyebrow}</p>'
             f'<h2 style="position:absolute; left:96px; top:108px; width:1240px; {PX}; font-size:{tsize}px; font-weight:400; line-height:1.1; letter-spacing:-1.04px; color:#111111; white-space:nowrap">{title}</h2>'
             f'<div style="position:absolute; left:824px; top:121px; width:1000px; height:44px; display:flex; flex-direction:row; justify-content:end; align-items:center; gap:16px">'
-            f'<p style="border:1px solid #d9d9d2; border-radius:100px; padding:9px 20px; {GE}; font-size:18px; font-weight:500; line-height:24px; color:#3a3a3a; white-space:nowrap">{chip}</p>'
+            f'<p style="border:1px solid #d9d9d2; border-radius:100px; padding:9px 20px; {MD}; font-size:18px; line-height:24px; color:#3a3a3a; white-space:nowrap">{chip}</p>'
             f'<p style="{MD}; font-size:18px; line-height:24px; color:#9a9a94; white-space:nowrap">@@N@@ / @@TOTAL@@</p></div>')
 
 def panel(left, width, label, inner, top=205, height=811, direction='row', gap=24):
@@ -321,7 +323,8 @@ json.dump({"v":4,"createdOnFiles":{"v":1,"at":"2026-09-27T19:43:48Z"},"title":"n
              "problem":{"description":"What the Sentinel audit found in today's noon iOS build on iPhone Duo","start":"act-problem"},
              "solution":{"description":"The redesign: layout principles, before and after, and every screen in every layout","start":"act-solution"},
              "next":{"description":"What happens next, and all eight screens together","start":"next"}},
- "faces":{"geist-pixel-square":{"family":"Geist Pixel Square","src":"/_blob/8aaabb5db122379a9f093cee0c782cc9"},
-          "geist":{"family":"Geist","href":"https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap"}},
+ "faces":{"geist-medium":{"family":"Geist Medium","src":"/_blob/1e63a3c1537b28b5ce76a1919b6233d1"},
+          "geist-semibold":{"family":"Geist SemiBold","src":"/_blob/e2bff1cac75a16fb23b2560722f0bfe2"},
+          "geist-pixel-square":{"family":"Geist Pixel Square","src":"/_blob/8aaabb5db122379a9f093cee0c782cc9"}},
  "designSystems":[]}, open('project/deck.json','w'), indent=1)
 print(order)

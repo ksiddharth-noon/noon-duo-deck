@@ -16,15 +16,15 @@ local.update({'5c4d1c7af2d1e0db1be9e181b76b5d62':'sentinel/wishlist-fold-closed-
 local.update({'977ab621c418bae5eed81026fb0458de':'bezels/outer.webp','6f06750c6a86ab1359dcb905c184116c':'bezels/inner.webp','7a16c39abfc8418ae3908984520b4b49':'bezels/portrait.webp'})
 deck = json.load(open(f'{d}/project/deck.json'))
 secs = '\n'.join(re.sub(r'/_blob/([0-9a-f]{32})', lambda m: local[m.group(1)], open(f'{d}/project/slides/{s}.html').read().strip()) for s in deck['order'])
-fontfile = {'Geist Pixel Square':'GeistPixel-Square'}
+fontfile = {'Geist Medium':'Geist-Medium','Geist SemiBold':'Geist-SemiBold','Geist Pixel Square':'GeistPixel-Square'}
 faces = ''.join(f'@font-face{{font-family:"{f}";src:url(fonts/{w}.woff2) format("woff2");font-display:block}}\n' for f, w in fontfile.items())
 old = open(f'{out}/index.html').read()
 head, rest = old.split('<div id="stage">', 1)
 tail = rest[rest.index('<div id="grid">'):]
 head = re.sub(r'@font-face[^\n]*\n', '', head)
 head = re.sub(r'<link rel="stylesheet"[^>]*>\n', '', head)
-head = head.replace('<style>\n', f'<link rel="stylesheet" href="{deck["faces"]["geist"]["href"]}">\n<style>\n' + faces, 1)
-head = re.sub(r"html,body\{[^}]*\}", "html,body{height:100%;background:#fafaf7;overflow:hidden;font-family:'Geist',Arial,sans-serif}", head)
+head = head.replace('<style>\n', '<style>\n' + faces, 1)
+head = re.sub(r"html,body\{[^}]*\}", "html,body{height:100%;background:#fafaf7;overflow:hidden;font-family:'Geist Medium',Arial,sans-serif}", head)
 head = head.replace('#grid{position:fixed;inset:0;background:#111', '#grid{position:fixed;inset:0;background:#e9e8e3')
 head = head.replace('.tile:hover{outline-color:#feee00}', '.tile:hover{outline-color:#111}')
 open(f'{out}/index.html','w').write(head + '<div id="stage">\n' + secs + '\n</div>\n' + tail)

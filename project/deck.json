@@ -59,13 +59,17 @@
   }
  },
  "faces": {
+  "geist-medium": {
+   "family": "Geist Medium",
+   "src": "/_blob/1e63a3c1537b28b5ce76a1919b6233d1"
+  },
+  "geist-semibold": {
+   "family": "Geist SemiBold",
+   "src": "/_blob/e2bff1cac75a16fb23b2560722f0bfe2"
+  },
   "geist-pixel-square": {
    "family": "Geist Pixel Square",
    "src": "/_blob/8aaabb5db122379a9f093cee0c782cc9"
-  },
-  "geist": {
-   "family": "Geist",
-   "href": "https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap"
   }
  },
  "designSystems": []

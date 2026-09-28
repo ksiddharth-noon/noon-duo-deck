@@ -51,6 +51,7 @@ Hand out `noon-duo-deck.vercel.app`; the scope-suffixed URLs the CLI prints sit 
   2026.1-21692, 25 Sep 2026), cut out of their white background for the findings slides.
 - `bezels/` — the iPhone Duo Star White device frames from the same Figma file (folded, open, and
   open rotated to portrait); the screen area is transparent and each screen sits underneath.
-- `fonts/` — Geist Pixel Square. Geist itself loads from Google Fonts.
+- `fonts/` — Geist Medium, Geist SemiBold (from the `geist` npm package, v1.4.2) and Geist Pixel Square,
+  all bundled so the deck never depends on a font CDN.
 
 noon's designs belong to noon; Geist and Geist Pixel are under the SIL Open Font License.
