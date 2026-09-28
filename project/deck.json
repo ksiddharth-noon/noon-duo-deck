@@ -7,15 +7,20 @@
  "title": "noon on iPhone Duo",
  "order": [
   "intro",
-  "cover",
+  "context",
+  "act-problem",
   "status",
   "evidence-1",
   "evidence-2",
+  "act-solution",
+  "cover",
   "postures",
   "edge",
   "split",
   "overlay",
   "sheet",
+  "ba-1",
+  "ba-2",
   "home-a",
   "home-b",
   "search-a",
@@ -32,24 +37,25 @@
   "tracking-b",
   "account-a",
   "account-b",
+  "next",
   "close"
  ],
  "sections": {
-  "intro": {
-   "description": "noon on a foldable, and the layout principles it follows",
+  "context": {
+   "description": "A foldable phone, and the five fold states every screen has to handle",
    "start": "intro"
   },
-  "status": {
-   "description": "Where today's noon iOS build stands on iPhone Duo, from the Sentinel audit",
-   "start": "status"
+  "problem": {
+   "description": "What the Sentinel audit found in today's noon iOS build on iPhone Duo",
+   "start": "act-problem"
   },
-  "screens": {
-   "description": "Each of the eight screens in all four layouts",
-   "start": "home-a"
+  "solution": {
+   "description": "The redesign: layout principles, before and after, and every screen in every layout",
+   "start": "act-solution"
   },
-  "close": {
-   "description": "All eight screens together",
-   "start": "close"
+  "next": {
+   "description": "What happens next, and all eight screens together",
+   "start": "next"
   }
  },
  "faces": {

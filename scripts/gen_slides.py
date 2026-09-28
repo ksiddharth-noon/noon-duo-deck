@@ -24,7 +24,6 @@ AR = {'outer':585/851,'inner':2160/1518,'inner-portrait':1518/2160,'inner-split'
 BG, PANEL = '#fafaf7', '#f1f1ec'
 SB, MD = "font-family:'Noontree SemiBold', Arial, sans-serif", "font-family:'Noontree Medium', Arial, sans-serif"
 PX, GE = "font-family:'Geist Pixel Square', 'Courier New', monospace", "font-family:'Geist', Arial, sans-serif"
-TOTAL = 27
 
 def shot(key, h, alt, w=None):
     src = B[key]; w = w or round(h*AR[key.split('-',1)[1] if not key.startswith('ref') else key])
@@ -58,7 +57,7 @@ def header(n, eyebrow, title, chip, tsize=52):
             f'<h2 style="position:absolute; left:96px; top:108px; width:1240px; {PX}; font-size:{tsize}px; font-weight:400; line-height:1.1; letter-spacing:-1.04px; color:#111111; white-space:nowrap">{title}</h2>'
             f'<div style="position:absolute; left:824px; top:121px; width:1000px; height:44px; display:flex; flex-direction:row; justify-content:end; align-items:center; gap:16px">'
             f'<p style="border:1px solid #d9d9d2; border-radius:100px; padding:9px 20px; {GE}; font-size:18px; font-weight:500; line-height:24px; color:#3a3a3a; white-space:nowrap">{chip}</p>'
-            f'<p style="{MD}; font-size:18px; line-height:24px; color:#9a9a94; white-space:nowrap">{n:02d} / {TOTAL}</p></div>')
+            f'<p style="{MD}; font-size:18px; line-height:24px; color:#9a9a94; white-space:nowrap">@@N@@ / @@TOTAL@@</p></div>')
 
 def panel(left, width, label, inner, top=205, height=811, direction='row', gap=24):
     return (f'<div style="position:absolute; left:{left}px; top:{top}px; width:{width}px; height:{height}px; background:{PANEL}; border-radius:28px; padding:24px; display:flex; flex-direction:column; gap:16px; overflow:hidden">'
@@ -90,9 +89,9 @@ L, W1, W2, X2 = 96, 580, 1108, 96+580+40   # narrow panel, wide panel, wide pane
 add('intro', '<div style="position:absolute; left:96px; top:474px; width:1400px; display:flex; flex-direction:column; gap:18px">'
     f'<p style="{MD}; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">Design principles</p>'
     f'<h2 style="{SB}; font-size:76px; font-weight:400; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>',
-    'Opening title. After the cover come five layout principles for the foldable, each pairing a noon screen with the Apple guidance it follows, then all eight screens.', bg='#000000')
+    "Opening title. The deck runs in three acts: the context of a foldable phone, the problem Sentinel found in today's app, and the redesign that solves it.", bg='#000000')
 
-add('cover', header(2, 'noon  ·  iPhone Duo', 'noon, unfolded.', '8 screens  →  4 layouts  →  32 designs', 96)
+add('cover', header(0, 'Solution  ·  noon on iPhone Duo', 'noon, unfolded.', '8 screens  →  4 layouts  →  32 designs', 96)
     + panel(L, 1728, 'Our screens  ·  Home, folded and open', S('home','outer',650,'noon home on the folded cover screen') + S('home','inner',650,'noon home on the open inner screen'), top=254, height=762, gap=40),
     'noon on a foldable: the cover screen when folded, the full inner display when open. Every screen comes from the iPhone Duo Figma file.')
 
@@ -136,7 +135,7 @@ stats = ('<div style="width:500px; display:flex; flex-direction:column; gap:36px
          + stat('3.71', 'Half fold landscape, the weakest fold state. Open portrait is the strongest at 4.41')
          + stat('1 crash', 'Folding the device closed on Wishlist crashes the app, in 2 of 2 runs')
          + '</div>')
-add('status', header(3, 'Status quo  ·  Sentinel audit', "Where noon's iOS app stands today", '11 flows  →  5 fold states  →  55 screens')
+add('status', header(0, 'Problem  ·  Sentinel audit', "Where noon's iOS app stands today", '11 flows  →  5 fold states  →  55 screens')
     + panel(L, W1, 'Key numbers  ·  build 2026.1-21692, 25 Sep 2026', stats, direction='column')
     + panel(X2, W2, 'Score by flow and fold state  ·  5 = no issues', ''.join(grid) + legend, direction='column', gap=20),
     "Sentinel audited today's noon iOS build, 2026.1-21692, on the iPhone Duo simulator (iOS 27.1 beta) on 25 Sep 2026: "
@@ -165,7 +164,7 @@ def evid(key, w, boxes, caption, meta, dashed=False):
             f'<div style="display:flex; flex-direction:column; gap:8px">'
             f'<p style="{SB}; font-size:22px; line-height:1.3; color:#111111">{caption}</p>'
             f'<p style="{MD}; font-size:16px; line-height:1.4; color:#8a8a84">{meta}</p></div></div>')
-add('evidence-1', header(4, 'Status quo  ·  Top findings, 1 of 2', 'What breaks on the fold today', 'Crash  →  Wrong rail  →  Hinge')
+add('evidence-1', header(0, 'Problem  ·  Top findings, 1 of 2', 'What breaks on the fold today', 'Crash  →  Wrong rail  →  Hinge')
     + panel(96, 440, 'Wishlist  ·  fold closed', evid('crash', 392, [(92, 122, 230, 294)], 'Fold the phone closed on Wishlist and noon quits to the home screen.', 'Crash  ·  reproduced 2 of 2  ·  the only critical finding'))
     + panel(576, 440, 'Order listing  ·  closed', evid('ol-c', 392, [(802, 796, 902, 1346)], 'The landscape tab rail shows on the closed screen, over the cards.', '3.8 / 5  ·  same rail on 6 screens'))
     + panel(1056, 768, 'Checkout  ·  half fold, landscape', evid('co-hl', 720, [(682, 56, 718, 962)], 'The crease runs through the Checkout title, the free-shipping banner and the product name.', '4.0 / 5  ·  content on the hinge on 5 screens')),
@@ -173,7 +172,7 @@ add('evidence-1', header(4, 'Status quo  ·  Top findings, 1 of 2', 'What breaks
     "while mounted; fix by keying the list on its column count. Order listing: the landscape tab rail is drawn in the closed portrait "
     "pose; show it only in landscape. Checkout: content straddles the hinge, and the audit notes the price is cut too; use hinge-aware "
     "layout so titles and prices stay in one pane.")
-add('evidence-2', header(5, 'Status quo  ·  Top findings, 2 of 2', 'What breaks on the fold today', 'Covered content  →  Empty space  →  Broken layout')
+add('evidence-2', header(0, 'Problem  ·  Top findings, 2 of 2', 'What breaks on the fold today', 'Covered content  →  Empty space  →  Broken layout')
     + panel(96, 360, 'Product listing  ·  open portrait', evid('plp-op', 312, [(356, 1082, 644, 1172)], 'Sort and Filter sit on top of a product’s title and price.', '4.5 / 5  ·  on 4 listing screens'))
     + panel(496, 644, 'Order listing  ·  open landscape', evid('ol-ol', 596, [(560, 386, 1244, 506), (560, 604, 1244, 720)], 'One column stretched across the wide screen leaves most of each card empty.', '3.6 / 5  ·  stretched single columns on 10 screens', dashed=True))
     + panel(1180, 644, 'Cart  ·  open landscape', evid('cart-ol', 596, [(56, 250, 1346, 328)], 'A dark band cuts across the cart and hides the payment summary heading.', '2.3 / 5, tied lowest  ·  the audit asks to confirm the band is app UI, not simulator chrome')),
@@ -181,6 +180,92 @@ add('evidence-2', header(5, 'Status quo  ·  Top findings, 2 of 2', 'What breaks
     "Order listing: cards stay one column at full width, leaving the right of every card blank; the open layouts in this deck use two "
     "columns instead. Cart in open landscape scores 2.3, tied for the lowest in the audit; the dark band may be simulator chrome, which "
     "Sentinel asks to confirm. Not pictured: the Search all orders field is 18pt tall, under the 44pt minimum touch target.")
+
+W3 = (1728 - 2*40) // 3   # three equal panels
+
+def title_card(id, eyebrow, title, notes):
+    """Black act divider in the style of the opening title card."""
+    add(id, '<div style="position:absolute; left:96px; top:474px; width:1600px; display:flex; flex-direction:column; gap:18px">'
+        f'<p style="{MD}; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">{eyebrow}</p>'
+        f'<h2 style="{SB}; font-size:76px; font-weight:400; line-height:1.25; letter-spacing:-1.2px; color:#f5f5f7">{title}</h2></div>', notes, bg='#000000')
+
+# ── Act 1 · Context: one screen of today's app in each fold state the audit tests ────────────────
+EV.update({
+    'hp-c':  ('a76e8e0e9d9a5b8ccdbf3c0d89484b37', 1000, 1393), 'hp-op': ('0834969f7fbd8e640d9ea0e9eeb458de', 1000, 1376),
+    'hp-ol': ('8cd18bee6e0422d6c69b5978a883aedb', 1400, 1017), 'hp-hp': ('9ec634b926245a6c85a7308fb53387de', 1000, 1376),
+    'hp-hl': ('2bc20e78958d31b709c784c4dab32605', 1400, 1017), 'od-ol': ('27d668aefa51b17dcebb22f571456954', 1400, 1017),
+})
+def plain(key, h, alt):
+    blob, iw, ih = EV[key]; w = round(iw * h / ih)
+    return f'<img src="/_blob/{blob}" alt="{alt}" style="width:{w}px; height:{h}px; object-fit:contain">', w
+def posed(key, h, pose, note):
+    img, w = plain(key, h, f"Today's noon home screen, {pose.lower()}")
+    return (f'<div style="width:{w}px; display:flex; flex-direction:column; gap:18px">{img}'
+            f'<div style="display:flex; flex-direction:column; gap:6px"><p style="{SB}; font-size:20px; line-height:1.3; color:#111111">{pose}</p>'
+            f'<p style="{MD}; font-size:16px; line-height:1.4; color:#8a8a84">{note}</p></div></div>')
+add('context', header(0, 'Context  ·  iPhone Duo', 'One app, five fold states', 'Closed  →  Open  →  Half fold')
+    + panel(L, 1728, "Today's noon home  ·  in each fold state the audit tests",
+            posed('hp-c', 330, 'Closed', 'The cover screen, phone-sized') + posed('hp-op', 330, 'Open portrait', 'The inner screen, upright')
+            + posed('hp-ol', 330, 'Open landscape', 'The inner screen, turned wide') + posed('hp-hp', 330, 'Half fold portrait', 'Half open, hinge across the middle')
+            + posed('hp-hl', 330, 'Half fold landscape', 'Stood like a book, hinge down the middle'), gap=12),
+    "iPhone Duo folds shut to a phone-sized cover screen and opens to a near-square inner screen, used upright or wide, flat or half "
+    "folded. Every screen of an app has to work in all five of these states. These are today's noon home screen in each, from the "
+    "Sentinel audit; home is one of the strongest flows, at 4.56 out of 5.")
+
+title_card('act-problem', 'The problem', "Today's app wasn't built for the fold",
+           "Act two. Sentinel audited today's noon iOS build in all five fold states. The next three slides are what it found.")
+title_card('act-solution', 'The solution', 'Designed for every posture',
+           "Act three. The redesign: five layout principles taken from Apple's foldable guidance, the audit's worst screens before and "
+           "after, and then all eight screens in every layout.")
+
+# ── Act 3 · Before and after: the audit's screenshot beside the redesigned screen ──────────────
+def tag(text, good):
+    bg, fg = BAND['good' if good else 'low']
+    return (f'<p style="position:absolute; left:12px; top:12px; background:{bg}; border-radius:100px; padding:5px 12px; {SB}; '
+            f'font-size:15px; line-height:18px; color:{fg}; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.10)">{text}</p>')
+def tagged(inner, w, h, text, good):
+    return f'<div style="position:relative; width:{w}px; height:{h}px; flex:none">{inner}{tag(text, good)}</div>'
+def before(key, h, score, alt):
+    img, w = plain(key, h, alt)
+    return tagged(img, w, h, f'Before&#160;·&#160;{score} / 5', False), w
+def after(sid, kind, h, alt):
+    bw, bh = BEZEL[kind][1:3]; w = round(bw * h / bh)
+    return tagged(S(sid, kind, h, alt), w, h, 'After&#160;·&#160;redesign', True), w
+def caption(text): return f'<p style="{SB}; font-size:21px; line-height:1.35; color:#111111">{text}</p>'
+def pair_v(bkey, score, sid, kind, text, alt_b, alt_a, h=305):
+    b, _ = before(bkey, h, score, alt_b); a, w = after(sid, kind, h, alt_a)
+    return f'<div style="width:{w}px; display:flex; flex-direction:column; gap:18px">{b}{a}{caption(text)}</div>'
+def pair_h(bkey, score, sid, kind, text, alt_b, alt_a, h=530):
+    b, wb = before(bkey, h, score, alt_b); a, wa = after(sid, kind, h, alt_a)
+    return (f'<div style="display:flex; flex-direction:column; gap:22px"><div style="display:flex; flex-direction:row; gap:24px">{b}{a}</div>'
+            f'<div style="width:{wb + wa + 24}px">{caption(text)}</div></div>')
+add('ba-1', header(0, 'Solution  ·  Before and after, 1 of 2', 'The worst screens, redesigned', 'Audit build  →  Redesign')
+    + panel(L, W3, 'Cart  ·  open landscape', pair_v('cart-ol', '2.3', 'cart', 'inner', 'Items on the left; the payment summary stays in view on the right.', 'Cart today, a dark band over the payment summary', 'Redesigned cart, items and payment summary in two columns'))
+    + panel(L+W3+40, W3, 'Order details  ·  open landscape', pair_v('od-ol', '3.7', 'tracking', 'inner', 'Tracking and the order summary fill the screen, not one narrow column.', 'Order details today, mostly empty screen', 'Redesigned order tracking across the full screen'))
+    + panel(L+2*(W3+40), W3, 'Checkout  ·  landscape', pair_v('co-hl', '4.0', 'checkout', 'inner', 'Two columns split at the hinge, so no line of text crosses the crease.', 'Checkout today, content across the hinge', 'Redesigned checkout in two columns')),
+    "Before: the Sentinel audit screenshots of today's build. After: the redesigned screens from the iPhone Duo Figma file. Cart goes "
+    "from a broken single column to items beside the payment summary. Order details stops leaving most of the screen empty. Checkout's "
+    "two columns meet at the hinge, so text no longer runs across the crease; the before is half folded, the after is the open "
+    "landscape layout it folds from.")
+add('ba-2', header(0, 'Solution  ·  Before and after, 2 of 2', 'The worst screens, redesigned', 'Audit build  →  Redesign')
+    + panel(L, 844, 'Product listing  ·  open portrait', pair_h('plp-op', '4.5', 'search', 'inner-portrait', 'Sort and filters sit in the header row, above the grid, instead of floating over a product.', 'Product listing today, Sort and Filter over a card', 'Redesigned search results, filters in the header'))
+    + panel(L+844+40, 844, 'Order listing  ·  closed', pair_h('ol-c', '3.8', 'tracking', 'outer', 'Controls live in the side column, so nothing sits on top of the cards.', 'Order listing today, the landscape rail over the cards', 'Redesigned order tracking cover, controls in the side column')),
+    "Product listing: today the Sort and Filter bar floats over a card; in the redesign sort and filters are chips in the header. "
+    "Order listing closed: today a landscape tab rail is drawn over the cards; in the redesign the controls sit in the side column and "
+    "the content stops short of it.")
+
+# ── Close · next steps ─────────────────────────────────────────────────────────────────────────────
+def step(n, title, text):
+    return (f'<div style="width:492px; display:flex; flex-direction:column; gap:14px">'
+            f'<p style="{PX}; font-size:64px; line-height:1; color:#111111">{n:02d}</p>'
+            f'<p style="{SB}; font-size:28px; line-height:1.3; color:#111111">{title}</p>'
+            f'<p style="{MD}; font-size:20px; line-height:1.45; color:#6b6b6b">{text}</p></div>')
+add('next', header(0, 'Next steps', 'From findings to a fold-ready noon', 'Fix  →  Build  →  Re-audit')
+    + panel(L, W3, 'Engineering  ·  blocks release', step(1, 'Fix the Wishlist crash', 'Key the Wishlist list on its column count so folding closed no longer crashes the app. It is the only critical finding.'))
+    + panel(L+W3+40, W3, 'Design and engineering', step(2, 'Build the new layouts', 'Side-column controls, two-column open layouts and sheets that keep status at the top, across all eight screens.'))
+    + panel(L+2*(W3+40), W3, 'Sentinel', step(3, 'Audit the new build', 'Re-run the audit in the same five fold states and compare with today: 4.04 out of 5, with 19 of 54 screens below 4.0.')),
+    "Three steps. The crash is an engineering fix and blocks release on its own. The layouts in this deck then need building. Finally, "
+    "re-run Sentinel on the new build in the same five fold states, so the result can be compared directly with today's 4.04.")
 
 add('postures', header(6, 'Principle  ·  Postures', 'Four postures, one app', 'Folded  →  Open  →  Portrait  →  Split')
     + panel(L, 1728, 'Our screens  ·  Home in every layout', row),
@@ -223,14 +308,18 @@ row = ''.join(cap(S(sid,'outer',273,f'{name}, folded'), name) for sid, name, _ i
 add('close', header(n, 'Summary', 'Eight screens, every posture', '8 screens  →  4 layouts  →  32 designs')
     + panel(L, 1728, 'Our screens  ·  Every cover screen', row, gap=16),
     'All eight cover screens together. Each also has open landscape, portrait and split-view layouts.')
-assert len(order) == TOTAL, len(order)
-
-for k, v in slides.items(): open(f'project/slides/{k}.html','w').write(v)
+SCREEN_SLIDES = [f'{sid}-{ab}' for sid, *_ in SCREENS for ab in 'ab']
+order = (['intro', 'context', 'act-problem', 'status', 'evidence-1', 'evidence-2',
+          'act-solution', 'cover', 'postures', 'edge', 'split', 'overlay', 'sheet', 'ba-1', 'ba-2']
+         + SCREEN_SLIDES + ['next', 'close'])
+assert sorted(order) == sorted(slides), set(order) ^ set(slides)
+for i, k in enumerate(order, 1):
+    open(f'project/slides/{k}.html', 'w').write(slides[k].replace('@@N@@', f'{i:02d}').replace('@@TOTAL@@', str(len(order))))
 json.dump({"v":4,"createdOnFiles":{"v":1,"at":"2026-09-27T19:43:48Z"},"title":"noon on iPhone Duo","order":order,
- "sections":{"intro":{"description":"noon on a foldable, and the layout principles it follows","start":"intro"},
-             "status":{"description":"Where today's noon iOS build stands on iPhone Duo, from the Sentinel audit","start":"status"},
-             "screens":{"description":"Each of the eight screens in all four layouts","start":"home-a"},
-             "close":{"description":"All eight screens together","start":"close"}},
+ "sections":{"context":{"description":"A foldable phone, and the five fold states every screen has to handle","start":"intro"},
+             "problem":{"description":"What the Sentinel audit found in today's noon iOS build on iPhone Duo","start":"act-problem"},
+             "solution":{"description":"The redesign: layout principles, before and after, and every screen in every layout","start":"act-solution"},
+             "next":{"description":"What happens next, and all eight screens together","start":"next"}},
  "faces":{"noontree-semibold":{"family":"Noontree SemiBold","src":"/_blob/a38b57215c536fa0e03d07a5daec7ee3"},
           "noontree-medium":{"family":"Noontree Medium","src":"/_blob/a25edd3639fbce9f53f835ce69a85ff3"},
           "geist-pixel-square":{"family":"Geist Pixel Square","src":"/_blob/8aaabb5db122379a9f093cee0c782cc9"},
