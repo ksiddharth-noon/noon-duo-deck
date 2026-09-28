@@ -8,6 +8,8 @@
  "order": [
   "intro",
   "cover",
+  "status",
+  "findings",
   "postures",
   "edge",
   "split",
@@ -35,6 +37,10 @@
   "intro": {
    "description": "noon on a foldable, and the layout principles it follows",
    "start": "intro"
+  },
+  "status": {
+   "description": "Where today's noon iOS build stands on iPhone Duo, from the Sentinel audit",
+   "start": "status"
   },
   "screens": {
    "description": "Each of the eight screens in all four layouts",
