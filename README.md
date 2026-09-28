@@ -1,6 +1,6 @@
 # noon on iPhone Duo — deck
 
-A 20-slide deck, in four parts, of noon's eight foldable screens (Home, Search, Product, Cart, Checkout, Address,
+An 18-slide deck, in four parts, of noon's eight foldable screens (Home, Search, Product, Cart, Checkout, Address,
 Order tracking, Account), each in four layouts: folded cover, open landscape, open portrait and
 split view. Styled after the *Design X Engineering* slide template in Figma
 (`LnvGQLmFhfU4tfm8WamCZe`, node `21:3`), set in Geist with Geist Pixel titles.

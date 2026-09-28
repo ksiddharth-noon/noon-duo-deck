@@ -157,8 +157,10 @@ EV = {  # key: (asset id, width, height)
     'ol-ol':    ('a61c605fe5c11abaf978a74cf6143087', 1400, 1017),
     'cart-ol':  ('a75f399840b0903b12b46b20ea63f6e8', 1400, 1017),
 }
+ANNOTATE = False   # the presentation deck shows clean screens; set True for the orange callouts
 def callout(x, y, w, h, label=None, side='top', dashed=False):
     """An orange outline at (x, y, w, h), with an optional label pill attached on one side."""
+    if not ANNOTATE: return ''
     out = (f'<div style="position:absolute; left:{round(x) - 5}px; top:{round(y) - 5}px; width:{round(w) + 10}px; height:{round(h) + 10}px; '
            f'border:3px {"dashed" if dashed else "solid"} {HI}; border-radius:14px; background:rgba(255,91,31,0.07)"></div>')
     if label:
@@ -361,7 +363,7 @@ def agenda_card(n, title, text):
 AGENDA = [('Context', "Where today's noon app stands on iPhone Duo, from the Sentinel audit."),
           ('Form factors', 'The six ways iPhone Duo is held, and the five we design for.'),
           ('Design principles', 'How navigation, status, actions, sheets and buttons adapt, one element at a time.'),
-          ('Screens', 'The worst screens before and after, then all eight rebuilt for the open screen.')]
+          ('Screens', 'The worst screens redesigned, then all eight rebuilt for the open screen.')]
 add('agenda', header(0, 'Agenda', 'Four parts', 'Context  →  Form factors  →  Principles  →  Screens')
     + ''.join(panel(L + i*(W4 + 40), W4, f'Part {i+1}', agenda_card(i+1, t, d)) for i, (t, d) in enumerate(AGENDA)),
     'The deck in four parts: the context from the Sentinel audit, the form factors we design for, the design principle for each '
@@ -374,7 +376,7 @@ title_card('p2', 'Part 2  ·  Form factors', 'What we are designing for',
 title_card('p3', 'Part 3  ·  Design principles', 'How each element adapts',
            'Part three. One element at a time: navigation, the status bar, top-bar actions, bottom sheets, sticky buttons and split view.')
 title_card('p4', 'Part 4  ·  Screens', 'Rebuilt for the open screen',
-           'Part four. The screens redesigned from the ground up to fill the open, unfolded screen: the worst ones from the audit before and after, then all eight.')
+           'Part four. The screens redesigned from the ground up to fill the open, unfolded screen: the worst ones from the audit first, then all eight.')
 
 # ── Part 2 · the six form factors ───────────────────────────────────────────────────────────────
 FF = [('ff-closed', 'Closed', 'Cover screen, portrait  ·  cover layout', True),
@@ -457,6 +459,32 @@ add('split', header(0, 'Principle  ·  Split view', 'Each app keeps its controls
     "In split view each app keeps its controls on its outer edge, and only the right-hand app carries the status bar. noon is the "
     "left app, so its back button and tab rail sit on the left edge; the right-hand app here is a placeholder.")
 
+add('sentinel', header(0, 'Context  ·  Sentinel audit', "Where noon's iOS app stands today", '11 flows  →  5 fold states  →  55 screens')
+    + panel(L, W1, 'Key numbers  ·  build 2026.1-21692, 25 Sep 2026', stats, direction='column')
+    + panel(X2, W2, 'What breaks  ·  from the audit',
+            evid('crash', 211, [], 'Folding closed crashes Wishlist.', 'The only critical finding')
+            + evid('co-hl', 399, [], 'The hinge runs through Checkout.', 'Content on the hinge on 5 screens')
+            + evid('cart-ol', 399, [], 'Cart breaks in landscape.', '2.3 / 5, tied lowest'), gap=24),
+    "Sentinel audited today's noon iOS build, 2026.1-21692, on the iPhone Duo simulator on 25 Sep 2026: 11 flows in 5 fold states. "
+    "Mean 4.04 out of 5 across 54 scored screens, and 19 score below 4.0. Folding the device closed on Wishlist crashes the app. On "
+    "Checkout half folded, the hinge runs through the content. Cart in open landscape scores 2.3, tied for the lowest.")
+
+# ── Part 4 · the audit's worst screens, redesigned (the redesign only; the audit score stays as a note) ──
+def redesign(sid, kind, h, text, was, alt):
+    return item(S_hl(sid, kind, h, alt, []), text, was)
+add('ba-1', header(0, 'Screens  ·  Redesigned, 1 of 2', 'The worst screens, redesigned', 'Cart  →  Order tracking  →  Checkout')
+    + panel(L, W3, 'Cart  ·  open landscape', redesign('cart', 'inner', 364, 'Items on the left; the payment summary stays in view on the right.', 'Scored 2.3 / 5 in the audit', 'Redesigned cart, items and payment summary in two columns'))
+    + panel(L+W3+40, W3, 'Order tracking  ·  open landscape', redesign('tracking', 'inner', 364, 'Tracking and the order summary fill the screen, not one narrow column.', 'Order details scored 3.7 / 5', 'Redesigned order tracking across the full screen'))
+    + panel(L+2*(W3+40), W3, 'Checkout  ·  open landscape', redesign('checkout', 'inner', 364, 'Two columns split at the hinge, so no line of text crosses the crease.', 'Half folded, it scored 4.0 / 5', 'Redesigned checkout in two columns')),
+    "The redesigned screens for the audit's weakest open-screen flows. Cart scored 2.3 in open landscape; it now puts items beside "
+    "the payment summary. Order details scored 3.7 and left most of the screen empty; tracking and the summary now fill it. "
+    "Checkout's two columns meet at the hinge, so text no longer runs across the crease.")
+add('ba-2', header(0, 'Screens  ·  Redesigned, 2 of 2', 'The worst screens, redesigned', 'Search results  →  Order tracking, closed')
+    + panel(L, 844, 'Search results  ·  open portrait', redesign('search', 'inner-portrait', 600, 'Sort and filters sit in the header row, above the grid.', 'Product listing scored 4.5 / 5, with Sort and Filter over a card', 'Redesigned search results, filters in the header'))
+    + panel(L+844+40, 844, 'Order tracking  ·  closed', redesign('tracking', 'outer', 600, 'Controls live in the side column, so nothing sits on top of the cards.', 'Order listing scored 3.8 / 5, with a landscape rail over the cards', 'Redesigned order tracking cover, controls in the side column')),
+    "Search results in open portrait: sort and filters are chips in the header instead of a bar floating over the products. "
+    "Order tracking on the cover screen: the controls sit in the side column and the content stops short of it.")
+
 # ── Part 4 · all eight screens, open ────────────────────────────────────────────────────────────
 def gcell(sid, name):
     dev = S(sid, 'inner', 291, f'{name}, open in landscape')
@@ -470,10 +498,10 @@ add('gallery', header(0, 'Screens  ·  All eight', 'Eight screens, built for the
     'Each also has cover, portrait and split-view layouts in the Figma file; the fold preview shows them live.')
 
 SCREEN_SLIDES = [f'{sid}-{ab}' for sid, *_ in SCREENS for ab in 'ab']
-# A 20-slide cut. Slides built above but left out of the story (the per-screen walkthrough, the
+# An 18-slide cut. Slides built above but left out of the story (the per-screen walkthrough, the
 # layouts overview, the cover-sheet detail and the old act cards) stay available in the generator.
 order = ['intro', 'agenda',
-         'p1', 'status', 'evidence-1', 'evidence-2',
+         'p1', 'sentinel',
          'p2', 'formfactors',
          'p3', 'nav', 'edge', 'actions', 'sheets', 'cta', 'split',
          'p4', 'ba-1', 'ba-2', 'gallery',
