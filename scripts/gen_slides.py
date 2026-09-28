@@ -22,6 +22,9 @@ B.update({'ref-04':'0a69c7ff68a6c42903ed6bfbb7825ea6','ref-05':'ccee3dee513fe6fb
 AR = {'outer':585/851,'inner':2160/1518,'inner-portrait':1518/2160,'inner-split':2160/1518,
       'ref-04':1654/879,'ref-05':1654/879,'ref-08':1654/879,'ref-09':1654/879,'ref-14':841/483,'ref-15':853/452,'ref-12':604/791,'outer-before':585/851}
 BG, PANEL = '#fafaf7', '#f1f1ec'
+# Which edition this branch builds. The `internal` branch marks every slide so it can't be mistaken
+# for the presentation deck on `main`.
+EDITION = 'Internal'
 # One typeface: Geist for all text (600 for emphasis, 500 for the rest), Geist Pixel for titles and numbers.
 # Geist ships as two bundled static faces, each its own family at its true weight, so nothing is
 # synthesised and nothing depends on Google Fonts loading.
@@ -59,7 +62,8 @@ def header(n, eyebrow, title, chip, tsize=52):
     return (f'<p style="position:absolute; left:96px; top:72px; width:1100px; {SB}; font-size:18px; letter-spacing:1.44px; text-transform:uppercase; color:#6b6b6b; white-space:nowrap">{eyebrow}</p>'
             f'<h2 style="position:absolute; left:96px; top:108px; width:1240px; {PX}; font-size:{tsize}px; font-weight:400; line-height:1.1; letter-spacing:-1.04px; color:#111111; white-space:nowrap">{title}</h2>'
             f'<div style="position:absolute; left:824px; top:121px; width:1000px; height:44px; display:flex; flex-direction:row; justify-content:end; align-items:center; gap:16px">'
-            f'<p style="border:1px solid #d9d9d2; border-radius:100px; padding:9px 20px; {MD}; font-size:18px; line-height:24px; color:#3a3a3a; white-space:nowrap">{chip}</p>'
+            + (f'<p style="background:#111111; border-radius:100px; padding:10px 16px; {SB}; font-size:14px; line-height:24px; letter-spacing:1px; text-transform:uppercase; color:#fafaf7; white-space:nowrap">{EDITION}</p>' if EDITION else '')
+            + f'<p style="border:1px solid #d9d9d2; border-radius:100px; padding:9px 20px; {MD}; font-size:18px; line-height:24px; color:#3a3a3a; white-space:nowrap">{chip}</p>'
             f'<p style="{MD}; font-size:18px; line-height:24px; color:#9a9a94; white-space:nowrap">@@N@@ / @@TOTAL@@</p></div>')
 
 def panel(left, width, label, inner, top=205, height=811, direction='row', gap=24):
@@ -90,7 +94,7 @@ L, W1, W2, X2 = 96, 580, 1108, 96+580+40   # narrow panel, wide panel, wide pane
 
 # Section intro, after Apple's "Design principles" title card: black, left-aligned, no header chrome.
 add('intro', '<div style="position:absolute; left:96px; top:474px; width:1400px; display:flex; flex-direction:column; gap:18px">'
-    f'<p style="{MD}; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">Design principles</p>'
+    f'<p style="{MD}; font-size:60px; line-height:1.25; letter-spacing:-0.6px; color:#86868b">Design principles{"&#160;&#160;·&#160;&#160;" + EDITION if EDITION else ""}</p>'
     f'<h2 style="{PX}; font-size:76px; line-height:1.2; letter-spacing:-1.52px; color:#f5f5f7">Adapting noon for iPhone Duo</h2></div>',
     "Opening title. The deck runs in three acts: the context of a foldable phone, the problem Sentinel found in today's app, and the redesign that solves it.", bg='#000000')
 
@@ -481,7 +485,7 @@ order = ['intro', 'agenda',
 missing = [k for k in order if k not in slides]; assert not missing, missing
 for i, k in enumerate(order, 1):
     open(f'project/slides/{k}.html', 'w').write(slides[k].replace('@@N@@', f'{i:02d}').replace('@@TOTAL@@', str(len(order))))
-json.dump({"v":4,"createdOnFiles":{"v":1,"at":"2026-09-27T19:43:48Z"},"title":"noon on iPhone Duo","order":order,
+json.dump({"v":4,"createdOnFiles":{"v":1,"at":"2026-09-27T19:43:48Z"},"title":"noon on iPhone Duo" + (f" · {EDITION}" if EDITION else ""),"order":order,
  "sections":{"context":{"description":"Where today's noon app stands on iPhone Duo, from the Sentinel audit","start":"intro"},
              "formfactors":{"description":"The six iPhone Duo form factors and the five we design for","start":"p2"},
              "principles":{"description":"How each element adapts: navigation, status, actions, sheets, sticky actions, split view","start":"p3"},
