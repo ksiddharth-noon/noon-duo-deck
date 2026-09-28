@@ -24,7 +24,7 @@ AR = {'outer':585/851,'inner':2160/1518,'inner-portrait':1518/2160,'inner-split'
 BG, PANEL = '#fafaf7', '#f1f1ec'
 SB, MD = "font-family:'Noontree SemiBold', Arial, sans-serif", "font-family:'Noontree Medium', Arial, sans-serif"
 PX, GE = "font-family:'Geist Pixel Square', 'Courier New', monospace", "font-family:'Geist', Arial, sans-serif"
-TOTAL = 23
+TOTAL = 24
 
 def shot(key, h, alt, w=None):
     src = B[key]; w = w or round(h*AR[key.split('-',1)[1] if not key.startswith('ref') else key])
@@ -69,8 +69,8 @@ def cap(img, text):
     return (f'<div style="display:flex; flex-direction:column; align-items:center; gap:16px">{img}'
             f'<p style="{MD}; font-size:18px; color:#6b6b6b; text-align:center">{text}</p></div>')
 
-def sec(id, body, notes):
-    return (f'<section id="{id}" data-transition="fade" style="background:{BG}; {MD}; color:#111111; padding:96px">\n{body}\n<aside>{notes}</aside>\n</section>\n')
+def sec(id, body, notes, bg=BG):
+    return (f'<section id="{id}" data-transition="fade" style="background:{bg}; {MD}; color:#111111; padding:96px">\n{body}\n<aside>{notes}</aside>\n</section>\n')
 
 SCREENS = [
  ('home','Home',"Folded, it's the noon you know. Open, offers and categories fill the display."),
@@ -83,7 +83,7 @@ SCREENS = [
  ('account','Account','The account menu on the left, your orders on the right.'),
 ]
 slides, order = {}, []
-def add(id, body, notes): slides[id] = sec(id, body, notes); order.append(id)
+def add(id, body, notes, **kw): slides[id] = sec(id, body, notes, **kw); order.append(id)
 L, W1, W2, X2 = 96, 580, 1108, 96+580+40   # narrow panel, wide panel, wide panel's left
 
 add('cover', header(1, 'noon  ·  iPhone Duo', 'noon, unfolded.', '8 screens  →  4 layouts  →  32 designs', 96)
@@ -91,33 +91,39 @@ add('cover', header(1, 'noon  ·  iPhone Duo', 'noon, unfolded.', '8 screens  �
     'noon on a foldable: the cover screen when folded, the full inner display when open. Every screen comes from the iPhone Duo Figma file.')
 
 row = ''.join(cap(S('home',k,350,a), c) for k,c,a in [('outer','Folded','Home folded'),('inner','Open','Home open in landscape'),('inner-portrait','Open, portrait','Home open in portrait'),('inner-split','Split view','Home in split view')])
-add('postures', header(2, 'Principle  ·  Postures', 'Four postures, one app', 'Folded  →  Open  →  Portrait  →  Split')
+# Section intro, after Apple's "Design principles" title card: black, left-aligned, no header chrome.
+add('intro', '<div style="position:absolute; left:96px; top:486px; width:1400px; display:flex; flex-direction:column; gap:14px">'
+    f'<p style="{MD}; font-size:60px; line-height:1.1; letter-spacing:-0.6px; color:#86868b">Design principles</p>'
+    f'<h2 style="{SB}; font-size:76px; font-weight:400; line-height:1.1; letter-spacing:-1.2px; color:#f5f5f7">Adapting your app</h2></div>',
+    'Section intro. The next five slides are the layout principles for the foldable, each pairing a noon screen with the Apple guidance it follows.', bg='#000000')
+
+add('postures', header(3, 'Principle  ·  Postures', 'Four postures, one app', 'Folded  →  Open  →  Portrait  →  Split')
     + panel(L, 1728, 'Our screens  ·  Home in every layout', row),
     'Each screen ships in four layouts: the folded cover, open in landscape, open in portrait, and split view beside a second app.')
 
-add('edge', header(3, 'Principle  ·  Side controls', 'Controls move to the edge', 'Camera  →  Status bar  →  App controls')
+add('edge', header(4, 'Principle  ·  Side controls', 'Controls move to the edge', 'Camera  →  Status bar  →  App controls')
     + panel(L, W1, 'Our screen  ·  Home, folded', S('home','outer',700,'noon home on the cover screen, with status and tab bar in a column on the right edge'))
     + panel(X2, W2, 'Reference  ·  Apple foldable guidance', R('09',657,'Apple Mail: Live Activities, status bar and app controls stacked on the trailing edge') + R('08',657,'Apple Mail: layout margin and horizontal safe area inset'), direction='column', gap=16),
     "Apple's foldable guidance turns the top and bottom bars into one column on the trailing edge: camera, then status, then the app's controls. noon's cover screens follow it; content keeps the full height.")
 
-add('split', header(4, 'Principle  ·  Split view', 'Split view, controls on the outer edge', 'noon  →  Divider  →  Second app')
+add('split', header(5, 'Principle  ·  Split view', 'Split view, controls on the outer edge', 'noon  →  Divider  →  Second app')
     + panel(L, W2, 'Our screen  ·  Home in split view', S('home','inner-split',700,'noon home in split view beside a placeholder app'))
     + panel(L+W2+40, W1, 'Reference  ·  Apple foldable guidance', R('15',532,'Diagram: each app keeps its controls on its outer edge') + R('04',532,'Apple Maps and Messages side by side in split view'), direction='column', gap=16),
     'In split view each app keeps its controls on its outer edge, and only the right-hand app carries the status bar. noon is the left app; the right one is a placeholder.')
 
-add('overlay', header(5, 'Principle  ·  Overlay', 'Sheets float over the page', 'Home  →  Address sheet')
+add('overlay', header(6, 'Principle  ·  Overlay', 'Sheets float over the page', 'Home  →  Address sheet')
     + panel(L, W2, 'Our screen  ·  Address, open', S('address','inner',700,'noon address picker floating as a sheet over home'))
     + panel(L+W2+40, W1, 'Reference  ·  Apple foldable guidance', R('14',532,'Diagram: primary view floating over the secondary view') + R('05',532,'Apple Notes: a primary card over the rest of the screen'), direction='column', gap=16),
     "On the open screen, noon's address picker is a sheet over home rather than a new page, matching Apple's overlay arrangement.")
 
 W3 = (1728 - 2*40) // 3   # three equal panels
-add('sheet', header(6, 'Principle  ·  Sheets on the cover', 'Sheets move status to the top', 'Sheet opens  →  Status moves up  →  Close in the sheet')
+add('sheet', header(7, 'Principle  ·  Sheets on the cover', 'Sheets move status to the top', 'Sheet opens  →  Status moves up  →  Close in the sheet')
     + panel(L, W3, 'Before  ·  Status in the side column', S('address','outer-before',640,'Address sheet on the cover screen, time still in the side column under the camera'))
     + panel(L+W3+40, W3, 'After  ·  Status pill at the top', S('address','outer',640,'Address sheet on the cover screen, time and Wi-Fi in a pill beside the camera and a close button in the sheet'))
     + panel(L+2*(W3+40), W3, 'Reference  ·  Apple share sheet', R('12',480,'Apple share sheet on the folded cover screen, with the status pill beside the camera')),
     "When a sheet covers the cover screen, the side column is hidden, so status moves into a glass pill beside the camera and the sheet carries its own close button — Apple's share-sheet pattern, now applied to noon's address picker.")
 
-n = 7
+n = 8
 for i, (sid, name, sub) in enumerate(SCREENS, 1):
     add(f'{sid}-a', header(n, f'{i:02d}  ·  {name}', f'{name}, folded and open', 'Cover screen  →  Inner screen')
         + panel(L, W1, 'Folded  ·  Cover screen', S(sid,'outer',700,f'{name}, folded'))
