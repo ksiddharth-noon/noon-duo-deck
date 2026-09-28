@@ -7,11 +7,11 @@ Run from the repo root: python3 scripts/gen_slides.py
 import os
 os.chdir(os.path.join(os.path.dirname(__file__), ".."))
 B = {
- 'account-inner-portrait':'78c3a3e7dd910d183415fb6b236f6ef6','account-inner-split':'815829d899b4adc3be60897576d17ab0','account-inner':'ef7f5643f80957ef7b1fc49e548e2df4','account-outer':'a512a76f2874ed313640e75c6d45154e',
- 'address-inner-portrait':'bbfdf81bb9ef5a750f2df4ccfbde425d','address-inner-split':'26635eb0c04da69c94d503df19d1a371','address-inner':'a5b3cbf1af3974b6b7291062108a6a0a','address-outer':'a2085a99c1193a6f042707e2d93d30e5','address-outer-before':'5ac182e975abd8c963407caff89e46ba',
- 'cart-inner-portrait':'ddf2ee7cd1cd67253ce6b289d89f846e','cart-inner-split':'159807b146adf368cdcfb87b860b5dd5','cart-inner':'6bddb21bb9e61557f0a2624435630691','cart-outer':'7541774f98b83f113baabdbc67f54d07',
+ 'account-inner-portrait':'78c3a3e7dd910d183415fb6b236f6ef6','account-inner-split':'ce3687a8ca24e3a84694332bc03d67f3','account-inner':'ef7f5643f80957ef7b1fc49e548e2df4','account-outer':'a512a76f2874ed313640e75c6d45154e',
+ 'address-inner-portrait':'bbfdf81bb9ef5a750f2df4ccfbde425d','address-inner-split':'d071056473f3f5a72a5e306b63040243','address-inner':'a5b3cbf1af3974b6b7291062108a6a0a','address-outer':'a2085a99c1193a6f042707e2d93d30e5','address-outer-before':'5ac182e975abd8c963407caff89e46ba',
+ 'cart-inner-portrait':'ddf2ee7cd1cd67253ce6b289d89f846e','cart-inner-split':'cd2d966ad96eaae8090174adb92729a2','cart-inner':'6bddb21bb9e61557f0a2624435630691','cart-outer':'7541774f98b83f113baabdbc67f54d07',
  'checkout-inner-portrait':'681ae0cc7026283120218bf9cf54b879','checkout-inner-split':'50d9242b0800b84385439b7f963c04ab','checkout-inner':'af78c9abe2369d968c53b610ea340db2','checkout-outer':'e2e2f11883d57e65adbec07ba08c45e7',
- 'home-inner-portrait':'2f8c1b3b905da4dff8ae6d1a7af9aa86','home-inner-split':'e1444dd83d71385aad44fea9621e7031','home-inner':'054310589fa45c52bba7971ef69a6e8d','home-outer':'747a6ede8a44002ef42848ab38fa7c9e',
+ 'home-inner-portrait':'2f8c1b3b905da4dff8ae6d1a7af9aa86','home-inner-split':'42c4e3dea2c10d6f36f9ef6ced00e72e','home-inner':'054310589fa45c52bba7971ef69a6e8d','home-outer':'747a6ede8a44002ef42848ab38fa7c9e',
  'product-inner-portrait':'193f9f1b120c1fefcfbcb9ba6ecebff9','product-inner-split':'b29cc7144afb8e98aa60e0fa3233ab8b','product-inner':'45cac00e50dfdc064ec09132860384ea','product-outer':'8d70c4b0af2506b7cf61fd9121733fd3',
  'search-inner-portrait':'f4e90147b8bfd13bb4f486fcc4f73265','search-inner-split':'04b66caa0f11041ed69ac01d69cf4e46','search-inner':'8200972d1b9e1c4b13048021c1f79be3','search-outer':'d146b441b98ac7e81f9392e70b29bafc',
  'tracking-inner-portrait':'aa0a49a22e6b8451f3fcffdc2ee5394c','tracking-inner-split':'576b3f04890ed01e1b8e0d699774b0bd','tracking-inner':'1f6b4a3d832ef3050e99603ecf4df460','tracking-outer':'c50db9261ca61f831722d2a9660bdbfc',
