@@ -29,5 +29,27 @@ head = head.replace('<style>\n', '<style>\n' + faces, 1)
 head = re.sub(r"html,body\{[^}]*\}", "html,body{height:100%;background:#fafaf7;overflow:hidden;font-family:'Geist Medium',Arial,sans-serif}", head)
 head = head.replace('#grid{position:fixed;inset:0;background:#111', '#grid{position:fixed;inset:0;background:#e9e8e3')
 head = head.replace('.tile:hover{outline-color:#feee00}', '.tile:hover{outline-color:#111}')
+# Link previews (WhatsApp, Slack, iMessage, X): og.jpg is a 1200x630 JPEG under WhatsApp's ~300 KB limit.
+SHARE = """<!-- share -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="How noon adapts to iPhone Duo: where today's app stands, the form factors we design for, the design principles and every screen rebuilt for the open screen.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="noon design">
+<meta property="og:title" content="noon on iPhone Duo">
+<meta property="og:description" content="Where today's app stands, and every screen rebuilt for the open screen.">
+<meta property="og:url" content="https://noon-duo-deck.vercel.app/">
+<meta property="og:image" content="https://noon-duo-deck.vercel.app/og.jpg">
+<meta property="og:image:secure_url" content="https://noon-duo-deck.vercel.app/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="noon on iPhone Duo: Product folded and Cart open on iPhone Duo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://noon-duo-deck.vercel.app/og.jpg">
+<meta name="theme-color" content="#111110">
+<!-- /share -->
+"""
+head = re.sub(r'<!-- share -->.*?<!-- /share -->\n', '', head, flags=re.S)
+head = re.sub(r'(<title>[^<]*</title>\n)', lambda m: m.group(1) + SHARE, head, count=1)
 open(f'{out}/index.html','w').write(head + '<div id="stage">\n' + secs + '\n</div>\n' + tail)
 print(secs.count('<section'), 'slides; unresolved blobs:', secs.count('/_blob/'))
